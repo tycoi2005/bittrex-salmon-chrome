@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+
+  "name": "Bittex salmon phishing",
+  "description": "Bittex salmon phishing",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "bittrex.ico",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "https://ajax.googleapis.com/",
+    "activeTab",
+    "https://bittrex.com/api/",
+    "notifications"
+  ], 
+  "background": {
+    "scripts": ["jquery-3.2.1.min.js", "jquery.number.js", "background.js"]
+  }
+}
