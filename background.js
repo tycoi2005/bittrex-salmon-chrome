@@ -1,7 +1,17 @@
 var salmonTop = null;
 var queue = [];
-var tangDelta = 0.15;
+var tangDelta = 0.1;
 var priceDelta = 0.1;
+var loopTime = 30000;
+
+chrome.storage.sync.get({
+    priceDelta: 0.1,
+    tangDelta: 0.1
+  }, function(items) {
+    console.log("loaded item", items)
+    priceDelta = items.priceDelta;
+    tangDelta = items.tangDelta;
+  });
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
 	console.log("options changed", changes);
@@ -15,6 +25,7 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 });
 
 function notifyMe(title, body, link) {
+  console.log(title);
   if (Notification.permission !== "granted")
     Notification.requestPermission();
   else {
@@ -103,16 +114,20 @@ function showTop(){
 	  			var delta = newItem.TangNumber - oldItem.TangNumber
   				if (delta > tangDelta){
   					notifyItem("DumpT", newItem)
+  					console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
+  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
   				}
 
   				var deltaPrice = (-(newItem.Last - oldItem.Last)/oldItem.Last)
   				if (deltaPrice > priceDelta){
   					notifyItem("DumpP", newItem)
+  					console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
   				}
 
   				var deltaPrice = ((newItem.Last - oldItem.Last)/oldItem.Last)
   				if (deltaPrice > priceDelta){
   					notifyItem("PumpP", newItem)
+  					console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
   				}
 	  		}
 	  	}
@@ -130,7 +145,7 @@ function scheduler(){
 		console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta);
 		count ++;
 		showTop();
-		setTimeout(doCheck, 60000);
+		setTimeout(doCheck, loopTime);
 	}
 	setTimeout(doCheck, 10);
 }
