@@ -13,9 +13,11 @@
     "https://ajax.googleapis.com/",
     "activeTab",
     "https://bittrex.com/api/",
-    "notifications"
+    "notifications",
+    "storage"
   ], 
   "background": {
     "scripts": ["jquery-3.2.1.min.js", "jquery.number.js", "background.js"]
-  }
+  },
+  "options_page": "options.html"
 }

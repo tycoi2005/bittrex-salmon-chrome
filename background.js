@@ -1,6 +1,18 @@
 var salmonTop = null;
 var queue = [];
-var xDelta = 0.2;
+var tangDelta = 0.15;
+var priceDelta = 0.1;
+
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+	console.log("options changed", changes);
+	if(changes.tangDelta){
+		tangDelta = changes.tangDelta.newValue;	
+	} else  if(changes.priceDelta){
+		priceDelta = changes.priceDelta.newValue;
+	}
+	
+	
+});
 
 function notifyMe(title, body, link) {
   if (Notification.permission !== "granted")
@@ -89,11 +101,19 @@ function showTop(){
 	  		var newItem = map[key]
 	  		if (oldItem && newItem){
 	  			var delta = newItem.TangNumber - oldItem.TangNumber
-	  			if (delta){
-	  				if (delta > xDelta){
-	  					notifyItem("DUMP", newItem)
-	  				}
-	  			}
+  				if (delta > tangDelta){
+  					notifyItem("DumpT", newItem)
+  				}
+
+  				var deltaPrice = (-(newItem.Last - oldItem.Last)/oldItem.Last)
+  				if (deltaPrice > priceDelta){
+  					notifyItem("DumpP", newItem)
+  				}
+
+  				var deltaPrice = ((newItem.Last - oldItem.Last)/oldItem.Last)
+  				if (deltaPrice > priceDelta){
+  					notifyItem("PumpP", newItem)
+  				}
 	  		}
 	  	}
 	  }
@@ -107,7 +127,7 @@ function showTop(){
 function scheduler(){
 
 	function doCheck(){
-		console.log("count",count);
+		console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta);
 		count ++;
 		showTop();
 		setTimeout(doCheck, 60000);
