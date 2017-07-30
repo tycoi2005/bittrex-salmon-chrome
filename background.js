@@ -2,7 +2,7 @@ var salmonTop = null;
 var queue = [];
 var tangDelta = 0.1;
 var priceDelta = 0.1;
-var loopTime = 30000;
+var loopTime = 60000;
 
 chrome.storage.sync.get({
     priceDelta: 0.1,
