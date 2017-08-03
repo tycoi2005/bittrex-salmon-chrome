@@ -108,6 +108,9 @@ function showTop(){
 	  if(queue.length > 0) {
 	  	var lastMap = queue[queue.length-1];
 	  	for (var key in map){
+	  		// only monitor BTC-* markets
+	  		if (!/^BTC-/.test(key))
+	  			continue;
 	  		var oldItem = lastMap[key];
 	  		var newItem = map[key]
 	  		if (oldItem && newItem){
