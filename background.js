@@ -6,11 +6,13 @@ var loopTime = 60000;
 
 chrome.storage.sync.get({
     priceDelta: 0.1,
-    tangDelta: 0.1
+    tangDelta: 0.1,
+    isNotifyTop: true,
   }, function(items) {
     console.log("loaded item", items)
     priceDelta = items.priceDelta;
     tangDelta = items.tangDelta;
+    isNotifyTop = items.isNotifyTop;
   });
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
@@ -20,6 +22,9 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 	}
 	if(changes.priceDelta){
 		priceDelta = changes.priceDelta.newValue;
+	}
+	if(changes.isNotifyTop) {
+		isNotifyTop = changes.isNotifyTop.newValue;
 	}
 	
 	
@@ -95,7 +100,7 @@ function showTop(){
 	  list.sort(compareObject);
 
 	  var topItem = list[0]
-	  if (topItem.MarketName != salmonTop){
+	  if (topItem.MarketName != salmonTop && isNotifyTop){
 	  	salmonTop = topItem.MarketName;
 	  	notifyItem("TOP",topItem);
 	  	
@@ -146,7 +151,7 @@ function showTop(){
 function scheduler(){
 
 	function doCheck(){
-		console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta);
+		console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta, ", isNotifyTop ", isNotifyTop);
 		count ++;
 		showTop();
 		setTimeout(doCheck, loopTime);
