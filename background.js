@@ -17,7 +17,8 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 	console.log("options changed", changes);
 	if(changes.tangDelta){
 		tangDelta = changes.tangDelta.newValue;	
-	} else  if(changes.priceDelta){
+	}
+	if(changes.priceDelta){
 		priceDelta = changes.priceDelta.newValue;
 	}
 	
