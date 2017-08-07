@@ -5,17 +5,21 @@ var priceDelta = 0.1;
 var loopTime = 60000;
 var isNotifyTop = true;
 var isNotifyPump = true;
+var isNotifyDumpT = true;
 
 chrome.storage.sync.get({
     priceDelta: 0.1,
     tangDelta: 0.1,
     isNotifyTop: true,
+    isNotifyPump: true,
+    isNotifyDumpT: true,
   }, function(items) {
     console.log("loaded item", items)
     priceDelta = items.priceDelta;
     tangDelta = items.tangDelta;
     isNotifyTop = items.isNotifyTop;
     isNotifyPump = items.isNotifyPump;
+    isNotifyDumpT = items.isNotifyDumpT;
   });
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
@@ -31,6 +35,10 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 	}
 	if(changes.isNotifyPump) {
 		isNotifyPump = changes.isNotifyPump.newValue;
+	}
+
+	if(changes.isNotifyDumpT) {
+		isNotifyDumpT = changes.isNotifyDumpT.newValue;
 	}
 	
 });
@@ -126,7 +134,7 @@ function showTop(){
 	  		var newItem = map[key]
 	  		if (oldItem && newItem){
 	  			var delta = newItem.TangNumber - oldItem.TangNumber
-  				if (delta > tangDelta){
+  				if (delta > tangDelta && isNotifyDumpT){
   					notifyItem("DumpT", newItem)
   					console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
   					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
@@ -156,7 +164,7 @@ function showTop(){
 function scheduler(){
 
 	function doCheck(){
-		console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta, ", isNotifyTop ", isNotifyTop, ", isNotifyPump ", isNotifyPump);
+		console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta, ", isNotifyTop ", isNotifyTop, ", isNotifyPump ", isNotifyPump, " , isNotifyDumpT ", isNotifyDumpT);
 		count ++;
 		showTop();
 		setTimeout(doCheck, loopTime);
