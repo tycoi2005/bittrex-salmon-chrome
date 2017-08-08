@@ -3,6 +3,7 @@ var queue = [];
 var tangDelta = 0.1;
 var priceDelta = 0.1;
 var loopTime = 60000;
+var loopTime30 = loopTime * 30 ;
 var isNotifyTop = true;
 var isNotifyPump = true;
 var isNotifyDumpT = true;
@@ -161,8 +162,25 @@ function showTop(){
 	});
 }
 
-function scheduler(){
+const apiCurrenciesUrl = "https://bittrex.com/api/v1.1/public/getcurrencies";
+var lastCoin = "";
+var balancePrefix = "https://bittrex.com/Balance?search=";
+function checkNewCoin(){
+	console.log("checkNewCoin")
+	$.get( apiCurrenciesUrl, function( data ) {
+		var coins = "";
+		var list = data.result;
+		var last = list[list.length-1];
+		var name = last.Currency;
+		var url = balancePrefix + name;
+		if (lastCoin != name){
+			lastCoin = name;
+			notifyMe("LastCoin " + name, "LastCoin " + name , url)
+		}
+	});
+}
 
+function scheduler(){
 	function doCheck(){
 		console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta, ", isNotifyTop ", isNotifyTop, ", isNotifyPump ", isNotifyPump, " , isNotifyDumpT ", isNotifyDumpT);
 		count ++;
@@ -170,6 +188,12 @@ function scheduler(){
 		setTimeout(doCheck, loopTime);
 	}
 	setTimeout(doCheck, 10);
+
+	function doCheckNewCoin(){
+		checkNewCoin();
+		setTimeout(doCheckNewCoin, loopTime30)
+	}
+	setTimeout(doCheckNewCoin, 100);	
 }
 
 scheduler();
