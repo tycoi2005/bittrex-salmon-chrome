@@ -12,7 +12,7 @@
   "permissions": [
     "https://ajax.googleapis.com/",
     "activeTab",
-    "https://bittrex.com/api/",
+    "https://www.bittrex.com/api/",
     "notifications",
     "storage"
   ], 
