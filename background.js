@@ -63,8 +63,8 @@ function notifyMe(title, body, link) {
 }
 
 var count =0 ;
-const apiUrl = "https://bittrex.com/api/v1.1/public/getmarketsummaries";
-const prefix = 'https://bittrex.com/Market/Index?MarketName=';
+const apiUrl = "https://www.bittrex.com/api/v1.1/public/getmarketsummaries";
+const prefix = 'https://www.bittrex.com/Market/Index?MarketName=';
 
 $(document).ready(function(){
     count ++
@@ -162,9 +162,9 @@ function showTop(){
 	});
 }
 
-const apiCurrenciesUrl = "https://bittrex.com/api/v1.1/public/getcurrencies";
+const apiCurrenciesUrl = "https://www.bittrex.com/api/v1.1/public/getcurrencies";
 var lastCoin = "";
-var balancePrefix = "https://bittrex.com/Balance?search=";
+var balancePrefix = "https://www.bittrex.com/Balance?search=";
 function checkNewCoin(){
 	console.log("checkNewCoin")
 	$.get( apiCurrenciesUrl, function( data ) {
