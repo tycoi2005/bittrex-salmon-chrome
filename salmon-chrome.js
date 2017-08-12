@@ -44,7 +44,7 @@ function showTop(){
 	  var htmlStr = "<tr><th>ID</th><th>Market</th><th>TangNumber</th><th>Volume</th><th>Last</th><</tr>"
 	  for (var i =0; i< 30; i++){
 	  	var item = list[i]
-	  	htmlStr += "<tr><td>"+i+"</td><td><a href='"+prefix + item.MarketName+"'>"+item.MarketName.replace("BTC-","")+"</a></td><td>"+format(item.TangNumber)+"</td><td>"+format(item.Volume)+"</td><td>"+item.Last+"</td></tr>"
+	  	htmlStr += "<tr><td>"+i+"</td><td><a href='"+prefix + item.MarketName+"'>"+item.MarketName.replace("BTC-","")+"</a></td><td>"+format(item.TangNumber)+"</td><td>"+format(item.BaseVolume)+"</td><td>"+item.Last+"</td></tr>"
 	  }	  
 	  $("#counter").html(count);
 	  $("#table").html(htmlStr);
