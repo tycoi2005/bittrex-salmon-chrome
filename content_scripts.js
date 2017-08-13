@@ -9,9 +9,9 @@ chrome.storage.sync.get({
     isAutoFillLot = items.isAutoFillLot;
 });
 
-
-$(document).ready(function(){
 /*
+$(document).ready(function(){
+
     // not work right now
     console.log("content ready....")
     if (isAutoFillLot){
@@ -35,5 +35,5 @@ $(document).ready(function(){
         injectAsk();
         
     }
-*/
 });
+*/

@@ -24,7 +24,7 @@
   "content_scripts": [
     {
       "matches": ["https://www.bittrex.com/Market/Index?MarketName=BTC-*"],
-      "js": ["jquery-3.2.1.min.js", "content_scripts.js"]
+      "js": ["content_scripts.js"]
     }
   ],
   "options_page": "options.html"
