@@ -155,7 +155,6 @@ function showTop(){
 	  		var newItem = map[key]
 	  		if (oldItem && newItem){
 	  			var delta = newItem.TangNumber - oldItem.TangNumber
-	  			var deltaPrice = (-(newItem.Last - oldItem.Last)/oldItem.Last)
 	  			var deltaPrice = ((newItem.Last - oldItem.Last)/oldItem.Last)
 	  			var isSmallcoin = newItem.BaseVolume <= smallCoinVolume;
 	  			var isBigCoin = newItem.BaseVolume >= bigCoinVolume;
@@ -167,7 +166,7 @@ function showTop(){
 	  					notifyItem("DT", newItem, deltaPrice)
 	  					console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-	  				} else if (deltaPrice/2 > priceDelta){
+	  				} else if (deltaPrice/2 < -priceDelta){
 	  					notifyItem("DP", newItem, deltaPrice)
 	  					console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
 	  				} else if (deltaPrice/2 > priceDelta && isNotifyPump){
@@ -179,7 +178,7 @@ function showTop(){
 	  					notifyItem("DT", newItem, deltaPrice)
 	  					console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-	  				} else if (deltaPrice > priceDelta){
+	  				} else if (deltaPrice < -priceDelta){
 	  					notifyItem("DP", newItem, deltaPrice)
 	  					console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
 	  				} else if (deltaPrice > priceDelta && isNotifyPump){
