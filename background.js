@@ -162,29 +162,29 @@ function showTop(){
 	  				continue;
 	  			}
 	  			if (isBigCoin){
-					if (delta > tangDelta/2 && isNotifyDumpT){
-	  					notifyItem("DT", newItem, deltaPrice)
-	  					console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
-	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-	  				} else if (deltaPrice/2 < -priceDelta){
+					if (deltaPrice/2 < -priceDelta){
 	  					notifyItem("DP", newItem, deltaPrice)
 	  					console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
 	  				} else if (deltaPrice/2 > priceDelta && isNotifyPump){
 	  					notifyItem("PP", newItem, deltaPrice)
 	  					console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
-	  				}
-	  			} else {
-	  				if (delta > tangDelta && isNotifyDumpT){
+	  				} else if (delta > tangDelta/2 && isNotifyDumpT){
 	  					notifyItem("DT", newItem, deltaPrice)
 	  					console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-	  				} else if (deltaPrice < -priceDelta){
+	  				}
+	  			} else {
+	  				if (deltaPrice < -priceDelta){
 	  					notifyItem("DP", newItem, deltaPrice)
 	  					console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
 	  				} else if (deltaPrice > priceDelta && isNotifyPump){
 	  					notifyItem("PP", newItem, deltaPrice)
 	  					console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
-	  				}	
+	  				} else if (delta > tangDelta && isNotifyDumpT){
+	  					notifyItem("DT", newItem, deltaPrice)
+	  					console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
+	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+	  				} 
 	  			}
   				
 	  		}
