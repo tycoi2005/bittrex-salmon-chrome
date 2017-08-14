@@ -1,4 +1,4 @@
-const apiCurrenciesUrl = "https://bittrex.com/api/v1.1/public/getcurrencies";
+const apiCurrenciesUrl = "https://www.bittrex.com/api/v1.1/public/getcurrencies";
 
 $(document).ready(function(){
 	console.log("check coins-------------------")
