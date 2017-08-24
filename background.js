@@ -118,6 +118,11 @@ function notifyItem(type, item, gap ){
 	} else{
 		gap = '-'
 	}
+	if (item.Last == item.Low){
+		console.log("item.Last == item.Low :: good dump"){
+			type = "*** " + type
+		}
+	}
 	var title = type + " " + item.MarketName + " : "+ gap +" : " + format(item.TangNumber) + " : " + item.Last ;
   	var body = title;
   	var link = prefix + item.MarketName;
