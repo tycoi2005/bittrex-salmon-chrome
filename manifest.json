@@ -4,7 +4,9 @@
   "name": "Bittex salmon phishing",
   "description": "Bittex salmon phishing",
   "version": "1.0",
-
+  "icons": {
+    "512" : "salmon-512.png"
+  },
   "browser_action": {
     "default_icon": "bittrex.ico",
     "default_popup": "popup.html"

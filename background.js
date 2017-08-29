@@ -158,6 +158,7 @@ function showTop(){
 	  			var deltaPrice = ((newItem.Last - oldItem.Last)/oldItem.Last)
 	  			var isSmallcoin = newItem.BaseVolume <= smallCoinVolume;
 	  			var isBigCoin = newItem.BaseVolume >= bigCoinVolume;
+	  			
 	  			if (isSmallcoin && !isNotifySmallCoin){
 	  				continue;
 	  			}
@@ -217,7 +218,7 @@ function checkNewCoin(){
 
 function scheduler(){
 	function doCheck(){
-		console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta, ", isNotifyTop ", isNotifyTop, ", isNotifyPump ", isNotifyPump, " , isNotifyDumpT ", isNotifyDumpT);
+		//console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta, ", isNotifyTop ", isNotifyTop, ", isNotifyPump ", isNotifyPump, " , isNotifyDumpT ", isNotifyDumpT);
 		count ++;
 		showTop();
 		setTimeout(doCheck, loopTime);
