@@ -10,6 +10,8 @@ var isNotifyDumpT = true;
 var smallCoinVolume = 10;
 var bigCoinVolume = 1000;
 var isNotifySmallCoin = true;
+var favoritecoins = [];
+
 chrome.storage.sync.get({
     priceDelta: 0.1,
     tangDelta: 0.1,
@@ -19,6 +21,7 @@ chrome.storage.sync.get({
     smallCoinVolume: 10,
     bigCoinVolume: 1000,
     isNotifySmallCoin: true,
+    favoritecoins: []
   }, function(items) {
     console.log("loaded item", items)
     priceDelta = items.priceDelta;
@@ -29,6 +32,7 @@ chrome.storage.sync.get({
     smallCoinVolume = items.smallCoinVolume;
     bigCoinVolume = items.bigCoinVolume;
     isNotifySmallCoin = items.isNotifySmallCoin;
+    favoritecoins = items.favoritecoins;
   });
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
@@ -56,6 +60,10 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 
 	if(changes.bigCoinVolume) {
 		bigCoinVolume = changes.bigCoinVolume.newValue;
+	}
+
+	if (changes.favoritecoins){
+		favoritecoins = changes.favoritecoins.newValue;
 	}
 });
 
@@ -118,10 +126,6 @@ function notifyItem(type, item, gap ){
 	} else{
 		gap = '-'
 	}
-	if (item.Last == item.Low){
-		console.log("item.Last == item.Low :: good dump");
-		type = "*** " + type;
-	}
 	var title = type + " " + item.MarketName + " : "+ gap +" : " + format(item.TangNumber) + " : " + item.Last ;
   	var body = title;
   	var link = prefix + item.MarketName;
@@ -162,11 +166,13 @@ function showTop(){
 	  			var deltaPrice = ((newItem.Last - oldItem.Last)/oldItem.Last)
 	  			var isSmallcoin = newItem.BaseVolume <= smallCoinVolume;
 	  			var isBigCoin = newItem.BaseVolume >= bigCoinVolume;
-	  			
+	  			var coinName = key.replace('BTC-','')
+	  			var isFavoriteCoin = favoritecoins.indexOf(coinName) >=0;
+
 	  			if (isSmallcoin && !isNotifySmallCoin){
 	  				continue;
 	  			}
-	  			if (isBigCoin){
+	  			if (isBigCoin || isFavoriteCoin){
 					if (deltaPrice/2 < -priceDelta){
 	  					notifyItem("DP", newItem, deltaPrice)
 	  					console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
@@ -222,7 +228,7 @@ function checkNewCoin(){
 
 function scheduler(){
 	function doCheck(){
-		//console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta, ", isNotifyTop ", isNotifyTop, ", isNotifyPump ", isNotifyPump, " , isNotifyDumpT ", isNotifyDumpT);
+		//console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta, ", isNotifyTop ", isNotifyTop, ", isNotifyPump ", isNotifyPump, " , 		 ", isNotifyDumpT);
 		count ++;
 		showTop();
 		setTimeout(doCheck, loopTime);

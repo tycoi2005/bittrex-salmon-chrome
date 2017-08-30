@@ -8,6 +8,12 @@ function save_options() {
   var bigCoinVolume = document.getElementById('bigCoinVolume').value;
   var isNotifySmallCoin = document.getElementById('isNotifySmallCoin').checked ;
   var lotsize = document.getElementById('lotsize').value;
+  var favoritecoins = document.getElementById('favoritecoins').value;
+  if (favoritecoins){
+    favoritecoins = favoritecoins.split(",")
+  } else {
+    favoritecoins = []
+  }
   var isAutoFillLot = document.getElementById('isAutoFillLot').checked ;
   if (priceDelta < 0.05) priceDelta = 0.05
   if (tangDelta < 0.05) tangDelta = 0.05
@@ -22,6 +28,7 @@ function save_options() {
     isNotifySmallCoin: isNotifySmallCoin,
     lotsize: lotsize,
     isAutoFillLot: isAutoFillLot,
+    favoritecoins: favoritecoins,
   }, function() {
     // Update status to let user know options were saved.
     var status = document.getElementById('status');
@@ -47,6 +54,7 @@ function restore_options() {
     isNotifySmallCoin: true,
     lotsize: 0.1,
     isAutoFillLot: true,
+    favoritecoins: [],
   }, function(items) {
     console.log("loaded item", items)
     document.getElementById('priceDelta').value = items.priceDelta;
@@ -59,6 +67,7 @@ function restore_options() {
     document.getElementById('isNotifySmallCoin').checked = items.isNotifySmallCoin;
     document.getElementById('lotsize').value = items.lotsize;
     document.getElementById('isAutoFillLot').checked = items.isAutoFillLot;
+    document.getElementById('favoritecoins').value = items.favoritecoins.join(",");
   });
 }
 document.addEventListener('DOMContentLoaded', restore_options);

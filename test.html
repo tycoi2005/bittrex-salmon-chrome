@@ -1,0 +1,14 @@
+<script>
+	var socket = new WebSocket(
+	  "wss://socket.bittrex.com/signalr/connect?transport=webSockets&clientProtocol=1.5"
+	);
+	// Connection opened
+	socket.addEventListener('open', function (event) {
+	    socket.send({"H":"corehub","M":"SubscribeToUserDeltas","A":[],"I":0});
+	});
+
+	// Listen for messages
+	socket.addEventListener('message', function (event) {
+	    console.log('Message from server ', event.data);
+	});
+</script>
