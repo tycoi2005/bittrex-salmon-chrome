@@ -173,7 +173,10 @@ function showTop(){
 	  			var isFavoriteCoin = favoritecoins.indexOf(coinName) >=0;
 
 	  			var deltaVol = (newItem.BaseVolume - oldItem.BaseVolume)/oldItem.BaseVolume;
-
+	  			var volDeltaFix = volDelta;
+	  			if (isSmallcoin){
+	  				volDeltaFix = volDeltaFix*2;
+	  			}
 	  			if (isSmallcoin && !isNotifySmallCoin){
 	  				continue;
 	  			}
@@ -189,7 +192,7 @@ function showTop(){
 	  					notifyItem("DT", newItem, deltaPrice)
 	  					console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-	  				} else if (deltaVol > volDelta/2){
+	  				} else if (deltaVol > volDeltaFix/2){
 	  					notifyItem("Vol", newItem, deltaVol)
 	  					console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
 	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
@@ -205,7 +208,7 @@ function showTop(){
 	  					notifyItem("DT", newItem, deltaPrice)
 	  					console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-	  				} else if (deltaVol > volDelta){
+	  				} else if (deltaVol > volDeltaFix){
 	  					notifyItem("Vol", newItem, deltaVol)
 	  					console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
 	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
