@@ -9,7 +9,6 @@ $(document).ready(function(){
 });
 
 function format(number){
-	console.log("number",number)
     return $.number( number, 2 )
 }
 
