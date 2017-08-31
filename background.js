@@ -168,6 +168,7 @@ function showTop(){
 	  			var delta = newItem.TangNumber - oldItem.TangNumber
 	  			var deltaPrice = ((newItem.Last - oldItem.Last)/oldItem.Last)
 	  			var isSmallcoin = newItem.BaseVolume <= smallCoinVolume;
+	  			var isVerySmallcoin = newItem.BaseVolume <= smallCoinVolume/2;
 	  			var isBigCoin = newItem.BaseVolume >= bigCoinVolume;
 	  			var coinName = key.replace('BTC-','')
 	  			var isFavoriteCoin = favoritecoins.indexOf(coinName) >=0;
@@ -177,6 +178,11 @@ function showTop(){
 	  			if (isSmallcoin){
 	  				volDeltaFix = volDeltaFix*2;
 	  			}
+
+	  			if (isVerySmallcoin){
+	  				volDeltaFix = volDeltaFix*2;	
+	  			}
+
 	  			if (isSmallcoin && !isNotifySmallCoin){
 	  				continue;
 	  			}
