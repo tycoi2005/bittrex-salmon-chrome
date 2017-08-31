@@ -11,6 +11,7 @@ var smallCoinVolume = 10;
 var bigCoinVolume = 1000;
 var isNotifySmallCoin = true;
 var favoritecoins = [];
+var volDelta =0.05;
 
 chrome.storage.sync.get({
     priceDelta: 0.1,
@@ -21,7 +22,8 @@ chrome.storage.sync.get({
     smallCoinVolume: 10,
     bigCoinVolume: 1000,
     isNotifySmallCoin: true,
-    favoritecoins: []
+    favoritecoins: [],
+    volDelta: 0.05
   }, function(items) {
     console.log("loaded item", items)
     priceDelta = items.priceDelta;
@@ -33,6 +35,7 @@ chrome.storage.sync.get({
     bigCoinVolume = items.bigCoinVolume;
     isNotifySmallCoin = items.isNotifySmallCoin;
     favoritecoins = items.favoritecoins;
+    volDelta = items.volDelta;
   });
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
@@ -169,9 +172,12 @@ function showTop(){
 	  			var coinName = key.replace('BTC-','')
 	  			var isFavoriteCoin = favoritecoins.indexOf(coinName) >=0;
 
+	  			var deltaVol = (newItem.BaseVolume - oldItem.BaseVolume)/oldItem.BaseVolume;
+
 	  			if (isSmallcoin && !isNotifySmallCoin){
 	  				continue;
 	  			}
+
 	  			if (isBigCoin || isFavoriteCoin){
 					if (deltaPrice/2 < -priceDelta){
 	  					notifyItem("DP", newItem, deltaPrice)
@@ -182,6 +188,10 @@ function showTop(){
 	  				} else if (delta > tangDelta/2 && isNotifyDumpT){
 	  					notifyItem("DT", newItem, deltaPrice)
 	  					console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
+	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+	  				} else if (deltaVol > volDelta/2){
+	  					notifyItem("Vol", newItem, deltaVol)
+	  					console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
 	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
 	  				}
 	  			} else {
@@ -195,7 +205,11 @@ function showTop(){
 	  					notifyItem("DT", newItem, deltaPrice)
 	  					console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-	  				} 
+	  				} else if (deltaVol > volDelta){
+	  					notifyItem("Vol", newItem, deltaVol)
+	  					console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
+	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+	  				}
 	  			}
   				
 	  		}

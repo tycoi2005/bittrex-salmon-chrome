@@ -57,7 +57,7 @@ function scheduler(){
 		console.log("count",count);
 		count ++;
 		showTop();
-		setTimeout(doCheck, 2000);
+		setTimeout(doCheck, 60000);
 	}
 	setTimeout(doCheck, 2000);
 }
