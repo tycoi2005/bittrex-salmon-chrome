@@ -248,7 +248,7 @@ function checkNewCoin(){
 
 function scheduler(){
 	function doCheck(){
-		console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta, ", isNotifyTop ", isNotifyTop, ", isNotifyPump ", isNotifyPump, " , 		 ", isNotifyDumpT);
+		//console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta, ", isNotifyTop ", isNotifyTop, ", isNotifyPump ", isNotifyPump, " , 		 ", isNotifyDumpT);
 		count ++;
 		showTop();
 		setTimeout(doCheck, loopTime);
