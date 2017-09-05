@@ -29,11 +29,13 @@
     "https://ajax.googleapis.com/",
     "activeTab",
     "https://www.bittrex.com/api/",
+    "https://socket.bittrex.com/signalr",
+    "wss://socket.bittrex.com/",
     "notifications",
     "storage"
   ], 
   "background": {
-    "scripts": ["jquery-3.2.1.min.js", "jquery.number.js", "background.js"]
+    "scripts": ["jquery-3.2.1.min.js", "jquery.number.js", "jquery.signalR.js", "hubs.js", "background.js"]
   },
   "content_scripts": [
     {

@@ -92,12 +92,6 @@ var count =0 ;
 const apiUrl = "https://www.bittrex.com/api/v1.1/public/getmarketsummaries";
 const prefix = 'https://www.bittrex.com/Market/Index?MarketName=';
 
-$(document).ready(function(){
-    count ++
-	scheduler()
-	//$("#counter").html(globaldata.count);
-});
-
 function format(number){
     return $.number( number, 2 )
 }
@@ -165,62 +159,7 @@ function showTop(){
 	  		var oldItem = lastMap[key];
 	  		var newItem = map[key]
 	  		if (oldItem && newItem){
-	  			var delta = newItem.TangNumber - oldItem.TangNumber
-	  			var deltaPrice = ((newItem.Last - oldItem.Last)/oldItem.Last)
-	  			var isSmallcoin = newItem.BaseVolume <= smallCoinVolume;
-	  			var isVerySmallcoin = newItem.BaseVolume <= smallCoinVolume/2;
-	  			var isBigCoin = newItem.BaseVolume >= bigCoinVolume;
-	  			var coinName = key.replace('BTC-','')
-	  			var isFavoriteCoin = favoritecoins.indexOf(coinName) >=0;
-
-	  			var deltaVol = (newItem.BaseVolume - oldItem.BaseVolume)/oldItem.BaseVolume;
-	  			var volDeltaFix = volDelta;
-	  			if (isSmallcoin){
-	  				volDeltaFix = volDeltaFix*2;
-	  			}
-
-	  			if (isVerySmallcoin){
-	  				volDeltaFix = volDeltaFix*2;	
-	  			}
-
-	  			if (isSmallcoin && !isNotifySmallCoin){
-	  				continue;
-	  			}
-
-	  			if (isBigCoin || isFavoriteCoin){
-					if (deltaPrice/2 < -priceDelta){
-	  					notifyItem("DP", newItem, deltaPrice)
-	  					console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
-	  				} else if (deltaPrice/2 > priceDelta && isNotifyPump){
-	  					notifyItem("PP", newItem, deltaPrice)
-	  					console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
-	  				} else if (delta > tangDelta/2 && isNotifyDumpT){
-	  					notifyItem("DT", newItem, deltaPrice)
-	  					console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
-	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-	  				} else if (deltaVol > volDeltaFix/2){
-	  					notifyItem("Vol", newItem, deltaVol)
-	  					console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
-	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-	  				}
-	  			} else {
-	  				if (deltaPrice < -priceDelta){
-	  					notifyItem("DP", newItem, deltaPrice)
-	  					console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
-	  				} else if (deltaPrice > priceDelta && isNotifyPump){
-	  					notifyItem("PP", newItem, deltaPrice)
-	  					console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
-	  				} else if (delta > tangDelta && isNotifyDumpT){
-	  					notifyItem("DT", newItem, deltaPrice)
-	  					console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
-	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-	  				} else if (deltaVol > volDeltaFix){
-	  					notifyItem("Vol", newItem, deltaVol)
-	  					console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
-	  					console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-	  				}
-	  			}
-  				
+	  			checkItem(oldItem, newItem, key)
 	  		}
 	  	}
 	  }
@@ -231,6 +170,64 @@ function showTop(){
 	});
 }
 
+function checkItem(oldItem, newItem, key){
+	var delta = newItem.TangNumber - oldItem.TangNumber
+	var deltaPrice = ((newItem.Last - oldItem.Last)/oldItem.Last)
+	var isSmallcoin = newItem.BaseVolume <= smallCoinVolume;
+	var isVerySmallcoin = newItem.BaseVolume <= smallCoinVolume/2;
+	var isBigCoin = newItem.BaseVolume >= bigCoinVolume;
+	var coinName = key.replace('BTC-','')
+	var isFavoriteCoin = favoritecoins.indexOf(coinName) >=0;
+
+	var deltaVol = (newItem.BaseVolume - oldItem.BaseVolume)/oldItem.BaseVolume;
+	var volDeltaFix = volDelta;
+	if (isSmallcoin){
+		volDeltaFix = volDeltaFix*2;
+	}
+
+	if (isVerySmallcoin){
+		volDeltaFix = volDeltaFix*2;	
+	}
+
+	if (isSmallcoin && !isNotifySmallCoin){
+		return;
+	}
+
+	if (isBigCoin || isFavoriteCoin){
+	if (deltaPrice/2 < -priceDelta){
+			notifyItem("DP", newItem, deltaPrice)
+			console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
+		} else if (deltaPrice/2 > priceDelta && isNotifyPump){
+			notifyItem("PP", newItem, deltaPrice)
+			console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
+		} else if (delta > tangDelta/2 && isNotifyDumpT){
+			notifyItem("DT", newItem, deltaPrice)
+			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
+			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+		} else if (deltaVol > volDeltaFix/2){
+			notifyItem("Vol", newItem, deltaVol)
+			console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
+			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+		}
+	} else {
+		if (deltaPrice < -priceDelta){
+			notifyItem("DP", newItem, deltaPrice)
+			console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
+		} else if (deltaPrice > priceDelta && isNotifyPump){
+			notifyItem("PP", newItem, deltaPrice)
+			console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
+		} else if (delta > tangDelta && isNotifyDumpT){
+			notifyItem("DT", newItem, deltaPrice)
+			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
+			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+		} else if (deltaVol > volDeltaFix){
+			notifyItem("Vol", newItem, deltaVol)
+			console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
+			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+		}
+	}
+
+}
 const apiCurrenciesUrl = "https://www.bittrex.com/api/v1.1/public/getcurrencies";
 var lastCoin = "";
 var balancePrefix = "https://www.bittrex.com/Balance?search=";
@@ -251,7 +248,7 @@ function checkNewCoin(){
 
 function scheduler(){
 	function doCheck(){
-		//console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta, ", isNotifyTop ", isNotifyTop, ", isNotifyPump ", isNotifyPump, " , 		 ", isNotifyDumpT);
+		console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta, ", isNotifyTop ", isNotifyTop, ", isNotifyPump ", isNotifyPump, " , 		 ", isNotifyDumpT);
 		count ++;
 		showTop();
 		setTimeout(doCheck, loopTime);
@@ -266,3 +263,36 @@ function scheduler(){
 }
 
 scheduler();
+
+function doWebsocket(){
+	// // use websocket with signalR
+	// var websockets_baseurl = 'wss://socket.bittrex.com/signalr'
+	// var websockets_hubs = ['CoreHub']
+	// var connection = $.connection(websockets_baseurl, websockets_hubs);
+	// console.log("connection", connection)
+	// connection.received(function(data) {
+	//     console.log("websocket return ", data);
+	// });
+	// $.support.cors = true;
+	// connection.start();	
+	// connection.start({ transport: ['webSockets'] });
+
+	//set the connection url.
+	$.connection.hub.url = 'https://socket.bittrex.com/signalr';
+	$.connection.hub.start( { transport: ['webSockets', 'longPolling'] }).done(function(){
+		var connection = $.connection.hub.proxies.corehub.connection
+		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"SubscribeToUserDeltas","A":[],"I":0})
+		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"SubscribeToExchangeDeltas","A":[],"I":2})
+		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"QueryBalanceState","A":[],"I":1})	
+		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"QueryExchangeState","A":[],"I":0})
+		$.connection.hub.transport.send(connection, {"H":"corehub","M":"QuerySummaryState","A":[],"I":0})	
+		$.connection.socket.onmessage = function(data){
+			console.log("data", data);
+		}
+	});
+}
+
+//doWebsocket()
+
+
+
