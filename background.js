@@ -264,6 +264,22 @@ function scheduler(){
 
 scheduler();
 
+
+// websocket
+var ci = {}, t=null;
+function f() {
+    t !== null && clearInterval(t)
+}
+
+function u(n) {
+    t !== null && clearInterval(t);
+    t = setInterval(function() {
+        i()
+    }, n)
+}
+function g(n) {
+    if ("string" == typeof n) return ci[n] || ci[n.toLowerCase()]
+}
 function doWebsocket(){
 	// // use websocket with signalR
 	// var websockets_baseurl = 'wss://socket.bittrex.com/signalr'
@@ -278,17 +294,98 @@ function doWebsocket(){
 	// connection.start({ transport: ['webSockets'] });
 
 	//set the connection url.
-	$.connection.hub.url = 'https://socket.bittrex.com/signalr';
-	$.connection.hub.start( { transport: ['webSockets', 'longPolling'] }).done(function(){
-		var connection = $.connection.hub.proxies.corehub.connection
+	var i = null;
+	$.connection.hub.url = "https://socket.bittrex.com/signalr";
+	$.connection.hub.start().done(function(){
+		i = $.connection.coreHub;
+		i.client.updateSummaryState = function(n) {
+            console.log("updateSummaryState n", n)
+        };
+        i.client.updateFloodState = function(n) {
+            console.log("updateFloodState n", n)
+        };
+        i.client.updateExchangeState = function(n) {
+            console.log("updateExchangeState n", n)
+        };
+        i.client.stopClient = function() {
+            $.connection.hub.stop()
+        };
+        i.client.refresh = function() {
+            market.server.refresh()
+        };
+        $.connection.hub.connectionSlow(function() {
+            console.log("websocket slow");
+            f("Slow");
+            $("#event-store").trigger({
+                type: "socket-slow"
+            })
+        });
+        $.connection.hub.reconnecting(function() {
+            console.log("websocket reconnecting");
+            f("Reconnecting");
+            $("#event-store").trigger({
+                type: "socket-reconnecting"
+            })
+        });
+        $.connection.hub.reconnected(function() {
+            console.log("websocket reconnected");
+            f("Connected");
+            $("#event-store").trigger({
+                type: "socket-connected"
+            })
+        });
+        $.connection.hub.disconnected(function() {
+            console.log("websocket disconnected");
+            f("Disconnected");
+            $("#event-store").trigger({
+                type: "socket-disconnected"
+            });
+            u(!1);
+            setTimeout(function() {
+                $.connection.hub.start().done(g);
+                console.log("reconnect websockets")
+            }, 5e3)
+        })
+        $.connection.hub.socket.onmessage = function (event){console.log("event.data",event.data)}
+        i.server.querySummaryState().then(function(b,d,e){
+        	// b is event, b.Nounce: number, b.Summaries: array has items:
+        	// ~ get market summary 
+        	console.log("b",b)
+        	for (var index=0; index<b.Summaries.length; index++){
+        		var item = b.Summaries[index];
+        		ed = i.server.subscribeToExchangeDeltas(item.MarketName);
+        		console.log("ed", ed)
+        		ed.then(function(b1,d1,e1){
+		        	console.log("b1",b1)
+		        	console.log("d1",d1)
+		        	console.log("e1",e1)
+        		})
+        		break;
+        	}
+        	console.log("d",d)
+        	console.log("e",e)
+        })
+
+        //ud = i.server.subscribeToUserDeltas()
+        //console.log("ud", ud)
+       
+        // i.server.subscribeToUserDeltas().done(function() {
+        //     console.log("server.subscribeToExchangeDeltas (done)")
+        //     i.server.queryBalanceState().done(function() {
+	       //      console.log("server.subscribeToExchangeDeltas (done)")
+	            
+	       //  })
+        // })
+
+		// var connection = $.connection.hub.proxies.corehub.connection
 		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"SubscribeToUserDeltas","A":[],"I":0})
 		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"SubscribeToExchangeDeltas","A":[],"I":2})
 		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"QueryBalanceState","A":[],"I":1})	
 		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"QueryExchangeState","A":[],"I":0})
-		$.connection.hub.transport.send(connection, {"H":"corehub","M":"QuerySummaryState","A":[],"I":0})	
-		$.connection.socket.onmessage = function(data){
-			console.log("data", data);
-		}
+		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"QuerySummaryState","A":[],"I":0})	
+		// $.connection.socket.onmessage = function(data){
+		// 	console.log("data", data);
+		// }
 	});
 }
 
