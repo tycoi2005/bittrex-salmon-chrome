@@ -260,26 +260,14 @@ function scheduler(){
 		setTimeout(doCheckNewCoin, loopTime30)
 	}
 	setTimeout(doCheckNewCoin, 100);	
+	setTimeout(doWebsocket, 200);
 }
 
 scheduler();
 
 
-// websocket
-var ci = {}, t=null;
-function f() {
-    t !== null && clearInterval(t)
-}
-
-function u(n) {
-    t !== null && clearInterval(t);
-    t = setInterval(function() {
-        i()
-    }, n)
-}
-function g(n) {
-    if ("string" == typeof n) return ci[n] || ci[n.toLowerCase()]
-}
+var Summaries = {};
+var isSumaryReady = false;
 function doWebsocket(){
 	// // use websocket with signalR
 	// var websockets_baseurl = 'wss://socket.bittrex.com/signalr'
@@ -296,8 +284,20 @@ function doWebsocket(){
 	//set the connection url.
 	var i = $.connection.coreHub;
 	i.client.updateSummaryState = function(n) {
-        console.log("updateSummaryState n", n)
         // need to code more here
+        if (!isSumaryReady){
+        	console.log("updateSummaryState n", n)
+        	return;
+        }
+
+        var Deltas = n.Deltas;
+        for (var i in Deltas){
+        	var item = Deltas[i];
+        	var key = item.MarketName;
+        	var oldItem = Summaries[key];
+        	checkItem(oldItem, item, key);
+        	Summaries[key]=item;
+        }
     };
     i.client.updateFloodState = function(n) {
         console.log("updateFloodState n", n)
@@ -349,42 +349,13 @@ function doWebsocket(){
         i.server.querySummaryState().then(function(b,d,e){
         	// b is event, b.Nounce: number, b.Summaries: array has items:
         	// ~ get market summary 
-        	console.log("b",b)
         	for (var index=0; index<b.Summaries.length; index++){
         		var item = b.Summaries[index];
-        		ed = i.server.subscribeToExchangeDeltas(item.MarketName);
-        		console.log("ed", ed)
-        		ed.then(function(b1,d1,e1){
-		        	console.log("b1",b1)
-		        	console.log("d1",d1)
-		        	console.log("e1",e1)
-        		})
-        		break;
+        		Summaries[item.MarketName] = item;
         	}
-        	console.log("d",d)
-        	console.log("e",e)
+        	isSumaryReady = true;
+        	console.log("Summaries",Summaries)
         })
-
-        //ud = i.server.subscribeToUserDeltas()
-        //console.log("ud", ud)
-       
-        // i.server.subscribeToUserDeltas().done(function() {
-        //     console.log("server.subscribeToExchangeDeltas (done)")
-        //     i.server.queryBalanceState().done(function() {
-	       //      console.log("server.subscribeToExchangeDeltas (done)")
-	            
-	       //  })
-        // })
-
-		// var connection = $.connection.hub.proxies.corehub.connection
-		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"SubscribeToUserDeltas","A":[],"I":0})
-		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"SubscribeToExchangeDeltas","A":[],"I":2})
-		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"QueryBalanceState","A":[],"I":1})	
-		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"QueryExchangeState","A":[],"I":0})
-		// $.connection.hub.transport.send(connection, {"H":"corehub","M":"QuerySummaryState","A":[],"I":0})	
-		// $.connection.socket.onmessage = function(data){
-		// 	console.log("data", data);
-		// }
 	});
 }
 
