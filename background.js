@@ -159,7 +159,7 @@ function showTop(){
 	  		var oldItem = lastMap[key];
 	  		var newItem = map[key]
 	  		if (oldItem && newItem){
-	  			checkItem(oldItem, newItem, key)
+	  			checkItem(oldItem, newItem, key, true)
 	  		}
 	  	}
 	  }
@@ -170,11 +170,13 @@ function showTop(){
 	});
 }
 
-function checkItem(oldItem, newItem, key){
+function checkItem(oldItem, newItem, key, isCheckVol){
 	var delta = newItem.TangNumber - oldItem.TangNumber
 	var deltaPrice = ((newItem.Last - oldItem.Last)/oldItem.Last)
 	var isSmallcoin = newItem.BaseVolume <= smallCoinVolume;
 	var isVerySmallcoin = newItem.BaseVolume <= smallCoinVolume/2;
+	var isSuperSmallcoin = newItem.BaseVolume <= smallCoinVolume/4;
+	var isSuperSuperSmallcoin = newItem.BaseVolume <= smallCoinVolume/8;
 	var isBigCoin = newItem.BaseVolume >= bigCoinVolume;
 	var coinName = key.replace('BTC-','')
 	var isFavoriteCoin = favoritecoins.indexOf(coinName) >=0;
@@ -186,6 +188,13 @@ function checkItem(oldItem, newItem, key){
 	}
 
 	if (isVerySmallcoin){
+		volDeltaFix = volDeltaFix*2;	
+	}
+
+	if (isSuperSmallcoin){
+		volDeltaFix = volDeltaFix*2;	
+	}
+	if (isSuperSuperSmallcoin){
 		volDeltaFix = volDeltaFix*2;	
 	}
 
@@ -204,11 +213,12 @@ function checkItem(oldItem, newItem, key){
 			notifyItem("DT", newItem, deltaPrice)
 			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-		} else if (deltaVol > volDeltaFix/2){
-			notifyItem("Vol", newItem, deltaVol)
-			console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
-			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-		}
+		} 
+		// else if (deltaVol > volDeltaFix/2 && isCheckVol){
+		// 	notifyItem("Vol", newItem, deltaVol)
+		// 	console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
+		// 	console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+		// }
 	} else {
 		if (deltaPrice < -priceDelta){
 			notifyItem("DP", newItem, deltaPrice)
@@ -220,11 +230,12 @@ function checkItem(oldItem, newItem, key){
 			notifyItem("DT", newItem, deltaPrice)
 			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-		} else if (deltaVol > volDeltaFix){
-			notifyItem("Vol", newItem, deltaVol)
-			console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
-			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-		}
+		} 
+		// else if (deltaVol > volDeltaFix && isCheckVol){
+		// 	notifyItem("Vol", newItem, deltaVol)
+		// 	console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
+		// 	console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+		// }
 	}
 
 }
@@ -283,7 +294,7 @@ function doWebsocket(){
         	var item = Deltas[i];
         	var key = item.MarketName;
         	var oldItem = Summaries[key];
-        	checkItem(oldItem, item, key);
+        	checkItem(oldItem, item, key, false);
         	Summaries[key]=item;
         }
     };
@@ -308,14 +319,14 @@ function doWebsocket(){
     });
     $.connection.hub.reconnecting(function() {
         console.log("websocket reconnecting");
-        f("Reconnecting");
+        //f("Reconnecting");
         $("#event-store").trigger({
             type: "socket-reconnecting"
         })
     });
     $.connection.hub.reconnected(function() {
         console.log("websocket reconnected");
-        f("Connected");
+        //f("Connected");
         $("#event-store").trigger({
             type: "socket-connected"
         })
