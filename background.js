@@ -270,18 +270,6 @@ var Summaries = {};
 var isSumaryReady = false;
 function doWebsocket(){
 	// // use websocket with signalR
-	// var websockets_baseurl = 'wss://socket.bittrex.com/signalr'
-	// var websockets_hubs = ['CoreHub']
-	// var connection = $.connection(websockets_baseurl, websockets_hubs);
-	// console.log("connection", connection)
-	// connection.received(function(data) {
-	//     console.log("websocket return ", data);
-	// });
-	// $.support.cors = true;
-	// connection.start();	
-	// connection.start({ transport: ['webSockets'] });
-
-	//set the connection url.
 	var i = $.connection.coreHub;
 	i.client.updateSummaryState = function(n) {
         // need to code more here
@@ -313,7 +301,7 @@ function doWebsocket(){
     };
     $.connection.hub.connectionSlow(function() {
         console.log("websocket slow");
-        f("Slow");
+        //f("Slow");
         $("#event-store").trigger({
             type: "socket-slow"
         })
