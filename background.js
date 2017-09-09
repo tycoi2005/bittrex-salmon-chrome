@@ -355,7 +355,10 @@ function doWebsocket(){
         	isSumaryReady = true;
         	console.log("Summaries",Summaries)
         })
-	});
+	}).fail(function (reason) {
+        console.log("SignalR connection failed: " + reason);
+        setTimeout(doWebsocket, 60000);
+    });;
 }
 
 //doWebsocket()

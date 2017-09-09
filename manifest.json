@@ -32,7 +32,8 @@
     "https://socket.bittrex.com/signalr",
     "wss://socket.bittrex.com/",
     "notifications",
-    "storage"
+    "storage",
+    "management"
   ], 
   "background": {
     "scripts": ["jquery-3.2.1.min.js", "jquery.number.js", "jquery.signalR.js", "hubs.js", "background.js"]
