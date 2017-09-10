@@ -8,5 +8,5 @@ function callBackgroundPage(){
 $(function() {
     console.log( "ready!" );
     $('#reloadbtn').click(reloadExtension)
-    $('#backgroundbtn').click(callBackgroundPage)
+    $('#btn').click(callBackgroundPage)
 });

@@ -293,6 +293,8 @@ function doWebsocket(){
         for (var i in Deltas){
         	var item = Deltas[i];
         	var key = item.MarketName;
+        	if (!/^BTC-/.test(key))
+	  			continue;
         	var oldItem = Summaries[key];
         	checkItem(oldItem, item, key, false);
         	Summaries[key]=item;
