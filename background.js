@@ -214,11 +214,11 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
 		} 
-		// else if (deltaVol > volDeltaFix/2 && isCheckVol){
-		// 	notifyItem("Vol", newItem, deltaVol)
-		// 	console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
-		// 	console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-		// }
+		else if (deltaVol > volDeltaFix/2 && isCheckVol){
+			notifyItem("Vol", newItem, deltaVol)
+			console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
+			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+		}
 	} else {
 		if (deltaPrice < -priceDelta){
 			notifyItem("DP", newItem, deltaPrice)
@@ -231,11 +231,11 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
 		} 
-		// else if (deltaVol > volDeltaFix && isCheckVol){
-		// 	notifyItem("Vol", newItem, deltaVol)
-		// 	console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
-		// 	console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
-		// }
+		else if (deltaVol > volDeltaFix && isCheckVol){
+			notifyItem("Vol", newItem, deltaVol)
+			console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
+			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+		}
 	}
 
 }
