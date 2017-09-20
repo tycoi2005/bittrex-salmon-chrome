@@ -2,7 +2,7 @@ var salmonTop = null;
 var queue = [];
 var tangDelta = 0.1;
 var priceDelta = 0.1;
-var loopTime = 60000;
+var loopTime = 45000;
 var loopTime30 = 60000 * 30 ;
 var isNotifyTop = true;
 var isNotifyPump = true;
@@ -150,8 +150,23 @@ function showTop(){
 	  	var item = list[i]
 	  	map[item.MarketName] = item;
 	  }
+	  // check time frame 1 minute
 	  if(queue.length > 0) {
 	  	var lastMap = queue[queue.length-1];
+	  	for (var key in map){
+	  		// only monitor BTC-* markets
+	  		if (!/^BTC-/.test(key))
+	  			continue;
+	  		var oldItem = lastMap[key];
+	  		var newItem = map[key]
+	  		if (oldItem && newItem){
+	  			checkItem(oldItem, newItem, key, true)
+	  		}
+	  	}
+	  }
+	  // check time frame 5 minutes
+	  if(queue.length > 4) {
+	  	var lastMap = queue[0];
 	  	for (var key in map){
 	  		// only monitor BTC-* markets
 	  		if (!/^BTC-/.test(key))

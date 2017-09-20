@@ -6,12 +6,14 @@
     var signalR = $.signalR;
 
     function makeProxyCallback(hub, callback) {
+        console.log("makeProxyCallback")
         return function() {
             callback.apply(hub, $.makeArray(arguments));
         };
     }
 
     function registerHubProxies(instance, shouldSubscribe) {
+        console.log("registerHubProxies")
         var key, hub, memberKey, memberValue, subscriptionMethod;
         for (key in instance) {
             if (instance.hasOwnProperty(key)) {
@@ -37,6 +39,7 @@
         }
     }
     $.hubConnection.prototype.createHubProxies = function() {
+        console.log("$.hubConnection.prototype.createHubProxies")
         var proxies = {};
         this.starting(function() {
             registerHubProxies(proxies, true);
