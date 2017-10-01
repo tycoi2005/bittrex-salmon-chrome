@@ -22,6 +22,10 @@ function compareObject(a, b){
 }
 
 function calcTangNumber(obj){
+	if(obj.Last === 0){
+		obj.TangNumber = 100;
+		return;	
+	}
 	obj.TangNumber = ((obj.High-obj.Last) - (obj.Last - obj.Low))/(obj.Last)
 
     //obj.TangNumber = ((obj.High-obj.Last))/(obj.Last)
