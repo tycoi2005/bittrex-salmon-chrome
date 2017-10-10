@@ -142,7 +142,6 @@ function showTop(){
 	  if (topItem.MarketName != salmonTop && isNotifyTop){
 	  	salmonTop = topItem.MarketName;
 	  	notifyItem("TOP",topItem);
-	  	
 	  }
 	  // put data to map
 	  var map = {}
@@ -254,9 +253,12 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 	}
 
 }
+const binanceCoinsUrl = "https://www.binance.com/api/v1/ticker/allPrices";
 const apiCurrenciesUrl = "https://www.bittrex.com/api/v1.1/public/getcurrencies";
 var lastCoin = "";
 var balancePrefix = "https://www.bittrex.com/Balance?search=";
+var binancePrefix = "https://www.binance.com/trade.html?symbol="
+var lastCoinBinance = ""
 function checkNewCoin(){
 	console.log("checkNewCoin")
 	$.get( apiCurrenciesUrl, function( data ) {
@@ -269,7 +271,22 @@ function checkNewCoin(){
 			lastCoin = name;
 			notifyMe("LastCoin " + name, "LastCoin " + name , url)
 		}
+
+		$.get( binanceCoinsUrl, function( data ) {
+			var coins = "";
+			var list = JSON.parse(data);
+			var last = list[list.length-1];
+			console.log("last", last)
+			var name = last.symbol;
+			var url = binancePrefix + name;
+			if (lastCoinBinance != name){
+				lastCoinBinance = name;
+				notifyMe("LastCoin binance " + name, "LastCoin " + name , url)
+			}
+		});
 	});
+
+	
 }
 
 function scheduler(){

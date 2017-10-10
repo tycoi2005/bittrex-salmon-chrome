@@ -26,6 +26,7 @@
   "permissions": [
     "tabs",
     "https://www.bittrex.com/Market/Index?MarketName=BTC-*",
+    "https://www.binance.com/api/v1/",
     "https://ajax.googleapis.com/",
     "activeTab",
     "https://www.bittrex.com/api/",
