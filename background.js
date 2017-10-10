@@ -2,7 +2,7 @@ var salmonTop = null;
 var queue = [];
 var tangDelta = 0.1;
 var priceDelta = 0.1;
-var loopTime = 45000;
+var loopTime = 60000;
 var loopTime30 = 60000 * 30 ;
 var isNotifyTop = true;
 var isNotifyPump = true;
@@ -288,6 +288,26 @@ function checkNewCoin(){
 
 	
 }
+const etherDeltaTickerUrl = "https://api.etherdelta.com/returnTicker";
+const etherDeltaPrefix = "https://etherdelta.com/#";
+function checkEtherDelta(){
+	console.log("checkEtherDelta")
+	$.get( etherDeltaTickerUrl, function( data ) {
+		//console.log("etherDeltaTickerUrl data", data, typeof data)
+		for (var name in data){
+			var item = data[name];
+			//ex {"ETH_AVT":{"tokenAddr":"0x0d88ed6e74bbfd96b831231638b66c05571e824f",
+			// "quoteVolume":224930.199,"baseVolume":2206.554,"last":0.010032682,"percentChange":0.3742,
+			// "bid":0.00900002,"ask":0.00953}
+			var url = etherDeltaPrefix + name;
+			var bid = item.bid; // buy order
+			var ask = item.ask; // sell order
+			if (bid/ask > 1.1){
+				notifyMe("profit etherdelta " + name, "Coin " + name , url)
+			}
+		}
+	})
+}
 
 function scheduler(){
 	function doCheck(){
@@ -302,8 +322,15 @@ function scheduler(){
 		checkNewCoin();
 		setTimeout(doCheckNewCoin, loopTime30)
 	}
+
 	setTimeout(doCheckNewCoin, 100);	
 	setTimeout(doWebsocket, 200);
+
+	function docheckEtherDelta(){
+		checkEtherDelta();
+		setTimeout(docheckEtherDelta, loopTime)
+	}
+	setTimeout(docheckEtherDelta, 300);	
 }
 
 scheduler();
