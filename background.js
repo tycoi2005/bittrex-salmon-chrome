@@ -290,6 +290,7 @@ function checkNewCoin(){
 }
 const etherDeltaTickerUrl = "https://api.etherdelta.com/returnTicker";
 const etherDeltaPrefix = "https://etherdelta.com/#";
+var notifieds = {}
 function checkEtherDelta(){
 	console.log("checkEtherDelta")
 	$.get( etherDeltaTickerUrl, function( data ) {
@@ -303,7 +304,12 @@ function checkEtherDelta(){
 			var bid = item.bid; // buy order
 			var ask = item.ask; // sell order
 			if (bid/ask > 1.1){
-				notifyMe("profit etherdelta " + name, "Coin " + name , url)
+				var lastbid = notifieds[name];
+				if (lastbid != bid){
+					notifieds[name] = bid;
+					notifyMe("profit etherdelta " + name, "Coin " + name , url)	
+				}
+				
 			}
 		}
 	})
