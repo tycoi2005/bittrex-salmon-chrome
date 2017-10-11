@@ -303,7 +303,7 @@ function checkEtherDelta(){
 			var url = etherDeltaPrefix + name;
 			var bid = item.bid; // buy order
 			var ask = item.ask; // sell order
-			if (bid/ask > 10 && bid < 0.1){
+			if (bid/ask > 10 && bid < 0.1 && bid>0 && ask>0){
 				var lastbid = notifieds[name];
 				if (lastbid != bid){
 					notifieds[name] = bid;
