@@ -217,7 +217,7 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 	}
 
 	if (isBigCoin || isFavoriteCoin){
-	if (deltaPrice/2 < -priceDelta){
+		if (deltaPrice/2 < -priceDelta){
 			notifyItem("DP", newItem, deltaPrice)
 			console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
 		} else if (deltaPrice/2 > priceDelta && isNotifyPump){
@@ -259,6 +259,9 @@ var lastCoin = "";
 var balancePrefix = "https://www.bittrex.com/Balance?search=";
 var binancePrefix = "https://www.binance.com/trade.html?symbol="
 var lastCoinBinance = ""
+var hitbtcCoinUrl = "https://api.hitbtc.com/api/1/public/ticker"
+var lastHitbtccoin = 0;
+
 function checkNewCoin(){
 	console.log("checkNewCoin")
 	$.get( apiCurrenciesUrl, function( data ) {
@@ -282,6 +285,17 @@ function checkNewCoin(){
 			if (lastCoinBinance != name){
 				lastCoinBinance = name;
 				notifyMe("LastCoin binance " + name, "LastCoin " + name , url)
+			}
+		});
+
+		$.get( hitbtcCoinUrl, function( data ) {
+			console.log("data", data)
+			var list = data;
+			var length = Object.keys(list).length;
+			console.log("hitbtc length", length)
+			if (lastHitbtccoin.length != length){
+				lastHitbtccoin = length;
+				notifyMe("LastCoin hitbtc change ", "HITBTC "+ length, hitbtcCoinUrl)
 			}
 		});
 	});

@@ -27,6 +27,7 @@
     "tabs",
     "https://www.bittrex.com/Market/Index?MarketName=BTC-*",
     "https://www.binance.com/api/v1/",
+    "https://api.hitbtc.com/api/1/",
     "https://api.etherdelta.com/",
     "https://ajax.googleapis.com/",
     "activeTab",
