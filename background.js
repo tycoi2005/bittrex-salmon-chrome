@@ -262,8 +262,9 @@ var lastCoin = "";
 var balancePrefix = "https://www.bittrex.com/Balance?search=";
 var binancePrefix = "https://www.binance.com/trade.html?symbol="
 var lastCoinBinance = ""
-var hitbtcCoinUrl = "https://api.hitbtc.com/api/1/public/ticker"
-var lastHitbtccoin = 0;
+var hitbtcCoinUrl = "https://api.hitbtc.com/api/1/public/symbols"
+var hitbtcCoinPrefix = "https://hitbtc.com/exchange/";
+var lastHitbtccoin = "";
 
 const marketsUrl = "https://www.bittrex.com/api/v1.1/public/getmarkets";
 var delist = []
@@ -306,12 +307,12 @@ function checkNewCoin(){
 
 		$.get( hitbtcCoinUrl, function( data ) {
 			console.log("data", data)
-			var list = data;
-			var length = Object.keys(list).length;
-			console.log("hitbtc length", length)
-			if (lastHitbtccoin.length != length){
-				lastHitbtccoin = length;
-				notifyMe("LastCoin hitbtc change ", "HITBTC "+ length, hitbtcCoinUrl)
+			var list = data.symbols;
+			var last = list[list.length-1]
+
+			if (lastHitbtccoin != last.symbol){
+				lastHitbtccoin = last.symbol;
+				notifyMe("LastCoin hitbtc ", lastHitbtccoin, hitbtcCoinPrefix + lastHitbtccoin)
 			}
 		});
 	});
