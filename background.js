@@ -3,7 +3,7 @@ var queue = [];
 var tangDelta = 0.1;
 var priceDelta = 0.1;
 var loopTime = 45000;
-var loopTime30 = 60000 * 30 ;
+var loopTime2 = 60000 * 2 ;
 var isNotifyTop = true;
 var isNotifyPump = true;
 var isNotifyDumpT = true;
@@ -185,6 +185,10 @@ function showTop(){
 }
 
 function checkItem(oldItem, newItem, key, isCheckVol){
+	// prevent notify delisted coin
+	if (delist.indexOf(key)>=0){
+		return;
+	}
 	var delta = newItem.TangNumber - oldItem.TangNumber
 	var deltaPrice = ((newItem.Last - oldItem.Last)/oldItem.Last)
 	var isSmallcoin = newItem.BaseVolume <= smallCoinVolume;
@@ -217,13 +221,13 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 	}
 
 	if (isBigCoin || isFavoriteCoin){
-		if (deltaPrice/2 < -priceDelta){
+		if (deltaPrice*2 < -priceDelta){
 			notifyItem("DP", newItem, deltaPrice)
 			console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
-		} else if (deltaPrice/2 > priceDelta && isNotifyPump){
+		} else if (deltaPrice*2 > priceDelta && isNotifyPump){
 			notifyItem("PP", newItem, deltaPrice)
 			console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
-		} else if (delta > tangDelta/2 && isNotifyDumpT){
+		} else if (delta > tangDelta*2 && isNotifyDumpT && deltaPrice*4 < -priceDelta){
 			notifyItem("DT", newItem, deltaPrice)
 			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
@@ -240,7 +244,7 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 		} else if (deltaPrice > priceDelta && isNotifyPump){
 			notifyItem("PP", newItem, deltaPrice)
 			console.log("gap ", deltaPrice, "new " , newItem.Last, " old ", oldItem.Last)
-		} else if (delta > tangDelta && isNotifyDumpT){
+		} else if (delta > tangDelta && isNotifyDumpT && deltaPrice*2 < -priceDelta){
 			notifyItem("DT", newItem, deltaPrice)
 			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
@@ -254,7 +258,6 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 
 }
 const binanceCoinsUrl = "https://www.binance.com/api/v1/ticker/allPrices";
-const apiCurrenciesUrl = "https://www.bittrex.com/api/v1.1/public/getcurrencies";
 var lastCoin = "";
 var balancePrefix = "https://www.bittrex.com/Balance?search=";
 var binancePrefix = "https://www.binance.com/trade.html?symbol="
@@ -262,18 +265,31 @@ var lastCoinBinance = ""
 var hitbtcCoinUrl = "https://api.hitbtc.com/api/1/public/ticker"
 var lastHitbtccoin = 0;
 
+const marketsUrl = "https://www.bittrex.com/api/v1.1/public/getmarkets";
+var delist = []
+
 function checkNewCoin(){
 	console.log("checkNewCoin")
-	$.get( apiCurrenciesUrl, function( data ) {
+	$.get( marketsUrl, function( data ) {
 		var coins = "";
 		var list = data.result;
 		var last = list[list.length-1];
-		var name = last.Currency;
+		var name = last.MarketName;
 		var url = balancePrefix + name;
+		console.log("lastcoin", lastCoin, "name", name)
 		if (lastCoin != name){
 			lastCoin = name;
-			notifyMe("LastCoin " + name, "LastCoin " + name , url)
+			notifyMe("LastCoin Bittrex " + name, "LastCoin " + name , url)
 		}
+
+		delist = []
+		for (var i =0; i< list.length; i++){
+			var coin = list[i]
+			if (coin.Notice && coin.Notice.indexOf('delete')>=0){
+				delist.push(coin.MarketName)
+			}
+		}
+		console.log("delisted coin:", delist);
 
 		$.get( binanceCoinsUrl, function( data ) {
 			var coins = "";
@@ -317,7 +333,7 @@ function checkEtherDelta(){
 			var url = etherDeltaPrefix + name;
 			var bid = item.bid; // buy order
 			var ask = item.ask; // sell order
-			if (bid/ask > 10 && bid < 0.1 && bid>0 && ask>0){
+			if (bid/ask > 10 && bid>0 && ask>0){
 				var lastbid = notifieds[name];
 				if (lastbid != bid){
 					notifieds[name] = bid;
@@ -329,7 +345,9 @@ function checkEtherDelta(){
 	})
 }
 
-function scheduler(){
+
+function scheduler(){	
+
 	function doCheck(){
 		//console.log("count ",count, ", tangDelta ", tangDelta, ", priceDelta ", priceDelta, ", isNotifyTop ", isNotifyTop, ", isNotifyPump ", isNotifyPump, " , 		 ", isNotifyDumpT);
 		count ++;
@@ -340,7 +358,7 @@ function scheduler(){
 
 	function doCheckNewCoin(){
 		checkNewCoin();
-		setTimeout(doCheckNewCoin, loopTime30)
+		setTimeout(doCheckNewCoin, loopTime2)
 	}
 
 	setTimeout(doCheckNewCoin, 100);	
