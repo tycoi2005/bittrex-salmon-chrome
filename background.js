@@ -227,7 +227,7 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 		} else if (priceChange/2 > priceDelta && isNotifyPump){
 			notifyItem("PP", newItem, priceChange)
 			console.log("gap ", priceChange, "new " , newItem.Last, " old ", oldItem.Last)
-		} else if (tangChange > tangDelta/2 && isNotifyDumpT && priceChange/3 < -priceDelta){
+		} else if (tangChange > tangDelta/2 && isNotifyDumpT && priceChange/3 < -priceDelta && newItem.TangNumber <10){
 			notifyItem("DT", newItem, priceChange)
 			console.log("gap ", tangChange, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
@@ -244,7 +244,7 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 		} else if (priceChange > priceDelta && isNotifyPump){
 			notifyItem("PP", newItem, priceChange)
 			console.log("gap ", priceChange, "new " , newItem.Last, " old ", oldItem.Last)
-		} else if (tangChange > tangDelta && isNotifyDumpT && priceChange/2 < -priceDelta){
+		} else if (tangChange > tangDelta && isNotifyDumpT && priceChange/2 < -priceDelta && newItem.TangNumber <10){
 			notifyItem("DT", newItem, priceChange)
 			console.log("gap ", tangChange, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
