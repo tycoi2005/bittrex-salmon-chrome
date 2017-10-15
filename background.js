@@ -189,7 +189,7 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 	if (delist.indexOf(key)>=0){
 		return;
 	}
-	var tangChange = newItem.TangNumber - oldItem.TangNumber
+	var delta = newItem.TangNumber - oldItem.TangNumber
 	var priceChange = ((newItem.Last - oldItem.Last)/oldItem.Last)
 	var isSmallcoin = newItem.BaseVolume <= smallCoinVolume;
 	var isVerySmallcoin = newItem.BaseVolume <= smallCoinVolume/2;
@@ -227,14 +227,14 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 		} else if (priceChange/2 > priceDelta && isNotifyPump){
 			notifyItem("PP", newItem, priceChange)
 			console.log("gap ", priceChange, "new " , newItem.Last, " old ", oldItem.Last)
-		} else if (tangChange > tangDelta/2 && isNotifyDumpT && priceChange/3 < -priceDelta && newItem.TangNumber <10){
+		} else if (delta > tangDelta/2 && isNotifyDumpT && priceChange/4 < -priceDelta){
 			notifyItem("DT", newItem, priceChange)
-			console.log("gap ", tangChange, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
+			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
 		} 
 		else if (deltaVol > volDeltaFix/2 && isCheckVol){
 			notifyItem("Vol", newItem, deltaVol)
-			console.log("gap ", tangChange, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
+			console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
 			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
 		}
 	} else {
@@ -244,14 +244,14 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 		} else if (priceChange > priceDelta && isNotifyPump){
 			notifyItem("PP", newItem, priceChange)
 			console.log("gap ", priceChange, "new " , newItem.Last, " old ", oldItem.Last)
-		} else if (tangChange > tangDelta && isNotifyDumpT && priceChange/2 < -priceDelta && newItem.TangNumber <10){
+		} else if (delta > tangDelta && isNotifyDumpT && priceChange/2 < -priceDelta){
 			notifyItem("DT", newItem, priceChange)
-			console.log("gap ", tangChange, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
+			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
 		} 
 		else if (deltaVol > volDeltaFix && isCheckVol){
 			notifyItem("Vol", newItem, deltaVol)
-			console.log("gap ", tangChange, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
+			console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
 			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
 		}
 	}
@@ -267,56 +267,69 @@ var hitbtcCoinPrefix = "https://hitbtc.com/exchange/";
 var lastHitbtccoin = "";
 var listHitbtc = {}
 
+const currencyUrl = "https://www.bittrex.com/api/v1.1/public/getcurrencies"
 const marketsUrl = "https://www.bittrex.com/api/v1.1/public/getmarkets";
 var delist = []
 
 function checkNewCoin(){
 	console.log("checkNewCoin")
-	$.get( marketsUrl, function( data ) {
+
+
+	$.get( currencyUrl, function( data ) {
 		var coins = "";
 		var list = data.result;
 		var last = list[list.length-1];
-		var name = last.MarketName;
+		var name = last.Currency;
 		var url = balancePrefix + name;
 		console.log("lastcoin", lastCoin, "name", name)
-		if (lastCoin != name){
+		if (lastCoin != name) {
 			lastCoin = name;
 			notifyMe("LastCoin Bittrex " + name, "LastCoin " + name , url)
 		}
 
-		delist = []
-		for (var i =0; i< list.length; i++){
-			var coin = list[i]
-			if (coin.Notice && coin.Notice.indexOf('delete')>=0){
-				delist.push(coin.MarketName)
-			}
-		}
-		console.log("delisted coin:", delist);
-
-		$.get( binanceCoinsUrl, function( data ) {
+		$.get( marketsUrl, function( data ) {
 			var coins = "";
-			var list = JSON.parse(data);
+			var list = data.result;
 			var last = list[list.length-1];
-			console.log("last", last)
-			var name = last.symbol;
-			var url = binancePrefix + name;
-			if (lastCoinBinance != name){
-				lastCoinBinance = name;
-				notifyMe("LastCoin binance " + name, "LastCoin " + name , url)
+			var name = last.MarketName;
+			var url = balancePrefix + name;
+
+			delist = []
+			for (var i =0; i< list.length; i++){
+				var coin = list[i]
+				if (coin.Notice && coin.Notice.indexOf('delete')>=0){
+					delist.push(coin.MarketName)
+				}
 			}
+			console.log("delisted coin:", delist);
+			// $.get( hitbtcCoinUrl, function( data ) {
+			// 	console.log("data", data)
+			// 	var list = data.symbols;
+			// 	var last = list[list.length-1]
+
+			// 	if (lastHitbtccoin != last.symbol){
+			// 		lastHitbtccoin = last.symbol;
+			// 		notifyMe("LastCoin hitbtc ", lastHitbtccoin, hitbtcCoinPrefix + lastHitbtccoin)
+			// 	}
+			// });
+
+			$.get( binanceCoinsUrl, function( data ) {
+				var coins = "";
+				var list = JSON.parse(data);
+				var last = list[list.length-1];
+				console.log("last", last)
+				var name = last.symbol;
+				var url = binancePrefix + name;
+				if (lastCoinBinance != name){
+					lastCoinBinance = name;
+					notifyMe("LastCoin binance " + name, "LastCoin " + name , url)
+				}
+			});
 		});
 
-		// $.get( hitbtcCoinUrl, function( data ) {
-		// 	console.log("data", data)
-		// 	var list = data.symbols;
-		// 	var last = list[list.length-1]
+	})
 
-		// 	if (lastHitbtccoin != last.symbol){
-		// 		lastHitbtccoin = last.symbol;
-		// 		notifyMe("LastCoin hitbtc ", lastHitbtccoin, hitbtcCoinPrefix + lastHitbtccoin)
-		// 	}
-		// });
-	});
+	
 
 	
 }
