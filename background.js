@@ -71,7 +71,7 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 });
 
 function notifyMe(title, body, link) {
-  console.log(title);
+  console.log(new Date(), title);
   if (Notification.permission !== "granted")
     Notification.requestPermission();
   else {
@@ -383,7 +383,7 @@ function scheduler(){
 		checkEtherDelta();
 		setTimeout(docheckEtherDelta, loopTime)
 	}
-	setTimeout(docheckEtherDelta, 300);	
+	//setTimeout(docheckEtherDelta, 300);	
 }
 
 scheduler();
