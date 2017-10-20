@@ -294,24 +294,30 @@ function checkNewCoin(){
 			var name = last.MarketName;
 			var url = balancePrefix + name;
 
+			olddelist = delist;
 			delist = []
 			for (var i =0; i< list.length; i++){
 				var coin = list[i]
 				if (coin.Notice && coin.Notice.indexOf('delete')>=0){
-					delist.push(coin.MarketName)
+					delist.push(coin.MarketName);
+					if (olddelist.indexOf(coin.MarketName)<0){
+						var urlDelist = balancePrefix + coin.MarketName
+                        notifyMe("NewDelist Bittrex " + coin.MarketName, "Delist " + coin.MarketName , urlDelist)
+					}
 				}
 			}
 			console.log("delisted coin:", delist);
-			// $.get( hitbtcCoinUrl, function( data ) {
-			// 	console.log("data", data)
-			// 	var list = data.symbols;
-			// 	var last = list[list.length-1]
 
-			// 	if (lastHitbtccoin != last.symbol){
-			// 		lastHitbtccoin = last.symbol;
-			// 		notifyMe("LastCoin hitbtc ", lastHitbtccoin, hitbtcCoinPrefix + lastHitbtccoin)
-			// 	}
-			// });
+			$.get( hitbtcCoinUrl, function( data ) {
+				console.log("data", data)
+				var list = data.symbols;
+				var last = list[list.length-1]
+
+				if (lastHitbtccoin != last.symbol){
+					lastHitbtccoin = last.symbol;
+					notifyMe("LastCoin hitbtc ", lastHitbtccoin, hitbtcCoinPrefix + lastHitbtccoin)
+				}
+			});
 
 			$.get( binanceCoinsUrl, function( data ) {
 				var coins = "";
@@ -383,7 +389,7 @@ function scheduler(){
 		checkEtherDelta();
 		setTimeout(docheckEtherDelta, loopTime)
 	}
-	//setTimeout(docheckEtherDelta, 300);	
+	setTimeout(docheckEtherDelta, 300);
 }
 
 scheduler();
