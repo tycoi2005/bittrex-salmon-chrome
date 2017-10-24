@@ -308,16 +308,16 @@ function checkNewCoin(){
 			}
 			console.log("delisted coin:", delist);
 
-			$.get( hitbtcCoinUrl, function( data ) {
-				console.log("data", data)
-				var list = data.symbols;
-				var last = list[list.length-1]
-
-				if (lastHitbtccoin != last.symbol){
-					lastHitbtccoin = last.symbol;
-					notifyMe("LastCoin hitbtc ", lastHitbtccoin, hitbtcCoinPrefix + lastHitbtccoin)
-				}
-			});
+			// $.get( hitbtcCoinUrl, function( data ) {
+			// 	console.log("data", data)
+			// 	var list = data.symbols;
+			// 	var last = list[list.length-1]
+            //
+			// 	if (lastHitbtccoin != last.symbol){
+			// 		lastHitbtccoin = last.symbol;
+			// 		notifyMe("LastCoin hitbtc ", lastHitbtccoin, hitbtcCoinPrefix + lastHitbtccoin)
+			// 	}
+			// });
 
 			$.get( binanceCoinsUrl, function( data ) {
 				var coins = "";
@@ -351,14 +351,16 @@ function checkEtherDelta(){
 			//ex {"ETH_AVT":{"tokenAddr":"0x0d88ed6e74bbfd96b831231638b66c05571e824f",
 			// "quoteVolume":224930.199,"baseVolume":2206.554,"last":0.010032682,"percentChange":0.3742,
 			// "bid":0.00900002,"ask":0.00953}
-			var url = etherDeltaPrefix + name;
+			var coinsymbol = name.replace("ETH_","") + "-ETH"
+			var url = etherDeltaPrefix + coinsymbol;
 			var bid = item.bid; // buy order
 			var ask = item.ask; // sell order
-			if (bid/ask > 10 && bid>0 && ask>0){
+			var profitLevel = bid/ask;
+			if (profitLevel > 2 && bid>0 && ask>0){
 				var lastbid = notifieds[name];
 				if (lastbid != bid){
 					notifieds[name] = bid;
-					notifyMe("profit etherdelta " + name, "Coin " + name , url)	
+					notifyMe("profit etherdelta "+profitLevel+" : " + name, "Coin " + name , url)
 				}
 				
 			}
