@@ -284,6 +284,7 @@ function checkNewCoin(){
 		console.log("lastcoin", lastCoin, "name", name)
 		if (lastCoin != name) {
 			lastCoin = name;
+            chrome.browserAction.setBadgeText({text:lastCoin})
 			notifyMe("LastCoin Bittrex " + name, "LastCoin " + name , url)
 		}
 
