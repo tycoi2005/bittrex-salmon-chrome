@@ -369,6 +369,47 @@ function checkEtherDelta(){
 	})
 }
 
+var hitbtctickers = null;
+var hitbtctickerUrl = "https://api.hitbtc.com/api/1/public/ticker";
+function checkDumpHitbtc(){
+	console.log("checkDumpHitbtc")
+	$.get( hitbtctickerUrl, function( data ) {
+		if (hitbtctickers == null){
+			hitbtctickers = data;
+		} else {
+			for (var name in data){
+				var oldItem = hitbtctickers[name];
+				var newItem = data[name];
+				checkDumpHitbtcItem(name, oldItem, newItem);
+			}
+		}
+	})
+}
+
+function checkDumpHitbtcItem(name, oldItem, newItem){
+	if (newItem.volume_quote < 20 || !/.*BTC$/.test(name)){
+		return;
+	}
+	var priceChange = (newItem.ask - oldItem.bid)/ oldItem.bid;
+	//console.log("checkdump ", name, "priceChange", priceChange, "priceDelta", priceDelta, "new " , newItem.ask, " old ", oldItem.bid)
+	if (priceChange < -priceDelta){
+		notifyItemHitbtc("DPHitbtc", name,  newItem, priceChange)
+		console.log("hitbtc",name, "gap ", priceChange, "new " , newItem.ask, " old ", oldItem.bid)
+	}
+}
+
+function notifyItemHitbtc(type, name, item, gap ){
+	if(gap){
+		gap = gap* 100;
+		gap = '' +$.number(gap,0) + '%';
+	} else{
+		gap = '-'
+	}
+	var title = type + " " + name + " : "+ gap + " : " + item.ask ;
+  	var body = title;
+  	var link = hitbtcCoinPrefix + name;
+  	notifyMe(title, body, link)
+}
 
 function scheduler(){	
 
@@ -393,6 +434,12 @@ function scheduler(){
 		setTimeout(docheckEtherDelta, loopTime)
 	}
 	setTimeout(docheckEtherDelta, 300);
+
+	function doCheckDumpHitbtc(){
+		checkDumpHitbtc();
+		setTimeout(doCheckDumpHitbtc, loopTime);
+	}
+	setTimeout(doCheckDumpHitbtc, 400)
 }
 
 scheduler();
