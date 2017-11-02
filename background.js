@@ -190,7 +190,7 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 		return;
 	}
 	var delta = newItem.TangNumber - oldItem.TangNumber
-	var priceChange = ((newItem.Last - oldItem.Last)/oldItem.Last)
+	var priceChange = ((newItem.Ask - oldItem.Bid)/oldItem.Bid)
 	var isSmallcoin = newItem.BaseVolume <= smallCoinVolume;
 	var isVerySmallcoin = newItem.BaseVolume <= smallCoinVolume/2;
 	var isSuperSmallcoin = newItem.BaseVolume <= smallCoinVolume/4;
@@ -382,6 +382,7 @@ function checkDumpHitbtc(){
 				var newItem = data[name];
 				checkDumpHitbtcItem(name, oldItem, newItem);
 			}
+			hitbtctickers = data;
 		}
 	})
 }
