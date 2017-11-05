@@ -79,7 +79,7 @@ function notifyMe(title, body, link) {
       icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
       body: body,
     });
-
+    NotifyQueue.addItem (title, link);
     notification.onclick = function () {
       window.open(link);      
     };

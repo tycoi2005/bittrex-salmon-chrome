@@ -39,7 +39,7 @@
     "management"
   ], 
   "background": {
-    "scripts": ["jquery-3.2.1.min.js", "jquery.number.js", "jquery.signalR.js", "hubs.js", "background.js"]
+    "scripts": ["jquery-3.2.1.min.js", "jquery.number.js", "jquery.signalR.js", "hubs.js", "notifyqueue.js", "background.js"]
   },
   "content_scripts": [
     {
