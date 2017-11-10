@@ -412,6 +412,48 @@ function notifyItemHitbtc(type, name, item, gap ){
   	notifyMe(title, body, link)
 }
 
+var binanceTickersUrl = "https://www.binance.com/api/v1/ticker/allBookTickers";
+var binanceTickers = {};
+function checkDumpBinance(){
+	console.log("checkDumpBinance")
+	$.get(binanceTickersUrl, function(data){
+		var list = data;
+		for (var i=0; i< list.length; i++){
+			var newItem = list[i];
+			var oldItem = binanceTickers[newItem.symbol]
+			binanceTickers[newItem.symbol] = newItem;
+			if (oldItem){
+				checkDumpBinanceItem(oldItem, newItem);
+			}
+		}
+	})
+}
+
+function checkDumpBinanceItem(oldItem, newItem){
+	if (newItem.bidQty < 1 || !/.*BTC$/.test(name)){
+		return;
+	}
+	var priceChange = (newItem.askPrice - oldItem.bidPrice)/ oldItem.bidPrice;
+	
+	if (priceChange < -priceDelta){
+		notifyItemBinance("DPBinance", newItem.symbol,  newItem, priceChange)
+		console.log("binance",newItem.symbol, "gap ", priceChange, "new " , newItem.askPrice, " old ", oldItem.bidPrice)
+	}
+}
+
+function notifyItemBinance(type, name, item, gap ){
+	if(gap){
+		gap = gap* 100;
+		gap = '' +$.number(gap,0) + '%';
+	} else{
+		gap = '-'
+	}
+	var title = type + " " + name + " : "+ gap + " : " + item.askPrice ;
+  	var body = title;
+  	var link = binancePrefix + name;
+  	notifyMe(title, body, link)
+}
+
 function scheduler(){	
 
 	function doCheck(){
@@ -434,13 +476,19 @@ function scheduler(){
 		checkEtherDelta();
 		setTimeout(docheckEtherDelta, loopTime)
 	}
-	setTimeout(docheckEtherDelta, 300);
+	//setTimeout(docheckEtherDelta, 300);
 
 	function doCheckDumpHitbtc(){
 		checkDumpHitbtc();
 		setTimeout(doCheckDumpHitbtc, loopTime);
 	}
-	setTimeout(doCheckDumpHitbtc, 400)
+	setTimeout(doCheckDumpHitbtc, 350)
+
+	function doCheckDumpBinance(){
+		checkDumpBinance();
+		setTimeout(doCheckDumpBinance, loopTime)
+	}
+	setTimeout(doCheckDumpBinance, 400)
 }
 
 scheduler();
