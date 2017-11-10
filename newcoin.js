@@ -17,7 +17,7 @@ $(document).ready(function(){
 
 	$.get( binanceCoinsUrl, function( data ) {
 		var coins = "";
-		var list = JSON.parse(data);
+		var list = data;
 		for (var i=list.length -1; i> list.length -5; i --){
 			var item = list[i];
 			var url = binancePrefix + item.symbol;

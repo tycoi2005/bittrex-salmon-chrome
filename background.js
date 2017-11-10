@@ -322,7 +322,7 @@ function checkNewCoin(){
 
 			$.get( binanceCoinsUrl, function( data ) {
 				var coins = "";
-				var list = JSON.parse(data);
+				var list = data;
 				var last = list[list.length-1];
 				console.log("last", last)
 				var name = last.symbol;
