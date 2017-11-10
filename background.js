@@ -489,6 +489,8 @@ function scheduler(){
 		setTimeout(doCheckDumpBinance, loopTime)
 	}
 	setTimeout(doCheckDumpBinance, 400)
+
+	// wss://stream2.binance.com:9443/ws/!ticker@arr binance socket api
 }
 
 scheduler();
