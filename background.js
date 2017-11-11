@@ -388,7 +388,7 @@ function checkDumpHitbtc(){
 }
 
 function checkDumpHitbtcItem(name, oldItem, newItem){
-	if (newItem.volume_quote < 20 || !/.*BTC$/.test(name)){
+	if (newItem.volume_quote < 5 || !/.*BTC$/.test(name)){
 		return;
 	}
 	var priceChange = (newItem.ask - oldItem.bid)/ oldItem.bid;
