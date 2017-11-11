@@ -392,6 +392,10 @@ function checkDumpHitbtcItem(name, oldItem, newItem){
 		return;
 	}
 	var priceChange = (newItem.ask - oldItem.bid)/ oldItem.bid;
+	var code = name.replace("BTC");
+	if (favoritecoins.indexOf(code)>=0){
+		priceChange = priceChange*2;
+	}
 	//console.log("checkdump ", name, "priceChange", priceChange, "priceDelta", priceDelta, "new " , newItem.ask, " old ", oldItem.bid)
 	if (priceChange < -priceDelta){
 		notifyItemHitbtc("DPHitbtc", name,  newItem, priceChange)
@@ -434,7 +438,10 @@ function checkDumpBinanceItem(oldItem, newItem){
 		return;
 	}
 	var priceChange = (newItem.askPrice - oldItem.bidPrice)/ oldItem.bidPrice;
-	
+	var code = newItem.symbol.replace("BTC");
+	if (favoritecoins.indexOf(code)>=0){
+		priceChange = priceChange*2;
+	}
 	if (priceChange < -priceDelta){
 		notifyItemBinance("DPBinance", newItem.symbol,  newItem, priceChange)
 		console.log("binance",newItem.symbol, "gap ", priceChange, "new " , newItem.askPrice, " old ", oldItem.bidPrice)
