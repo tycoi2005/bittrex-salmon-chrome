@@ -117,13 +117,14 @@ function calcTangNumber(obj){
 }
 
 function notifyItem(type, item, gap ){
+	//console.log("notifyItem item", item)
 	if(gap){
 		gap = gap* 100;
 		gap = '' +$.number(gap,0) + '%';
 	} else{
 		gap = '-'
 	}
-	var title = type + " " + item.MarketName + " : "+ gap +" : " + format(item.TangNumber) + " : " + item.Last ;
+	var title = type + " " + item.MarketName + " : "+ gap +" : " + format(item.TangNumber) + " : " + item.Ask ;
   	var body = title;
   	var link = prefix + item.MarketName;
   	notifyMe(title, body, link)
@@ -190,7 +191,7 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 		return;
 	}
 	var delta = newItem.TangNumber - oldItem.TangNumber
-	var priceChange = ((newItem.Ask - oldItem.Last)/oldItem.Last)
+	var priceChange = ((newItem.Ask - oldItem.Bid)/oldItem.Bid)
 	var isSmallcoin = newItem.BaseVolume <= smallCoinVolume;
 	var isVerySmallcoin = newItem.BaseVolume <= smallCoinVolume/2;
 	var isSuperSmallcoin = newItem.BaseVolume <= smallCoinVolume/4;
@@ -223,36 +224,36 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 	if (isBigCoin || isFavoriteCoin){
 		if (priceChange/2 < -priceDelta){
 			notifyItem("DP", newItem, priceChange)
-			console.log("gap ", priceChange, "new " , newItem.Last, " old ", oldItem.Last)
+			console.log("gap ", priceChange, "new " , newItem.Ask, " old ", oldItem.Bid)
 		} else if (priceChange/2 > priceDelta && isNotifyPump){
 			notifyItem("PP", newItem, priceChange)
-			console.log("gap ", priceChange, "new " , newItem.Last, " old ", oldItem.Last)
+			console.log("gap ", priceChange, "new " , newItem.Ask, " old ", oldItem.Bid)
 		} else if (delta > tangDelta/2 && isNotifyDumpT && priceChange/4 < -priceDelta){
 			notifyItem("DT", newItem, priceChange)
 			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
-			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+			console.log("price ", "new " , newItem.Ask, " old ", oldItem.Bid)
 		} 
 		else if (deltaVol > volDeltaFix/2 && isCheckVol){
 			notifyItem("Vol", newItem, deltaVol)
 			console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
-			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+			console.log("price ", "new " , newItem.Ask, " old ", oldItem.Bid)
 		}
 	} else {
 		if (priceChange < -priceDelta){
 			notifyItem("DP", newItem, priceChange)
-			console.log("gap ", priceChange, "new " , newItem.Last, " old ", oldItem.Last)
+			console.log("gap ", priceChange, "new " , newItem.Ask, " old ", oldItem.Bid)
 		} else if (priceChange > priceDelta && isNotifyPump){
 			notifyItem("PP", newItem, priceChange)
-			console.log("gap ", priceChange, "new " , newItem.Last, " old ", oldItem.Last)
+			console.log("gap ", priceChange, "new " , newItem.Ask, " old ", oldItem.Bid)
 		} else if (delta > tangDelta && isNotifyDumpT && priceChange/2 < -priceDelta){
 			notifyItem("DT", newItem, priceChange)
 			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
-			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+			console.log("price ", "new " , newItem.Ask, " old ", oldItem.Bid)
 		} 
 		else if (deltaVol > volDeltaFix && isCheckVol){
 			notifyItem("Vol", newItem, deltaVol)
 			console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
-			console.log("price ", "new " , newItem.Last, " old ", oldItem.Last)
+			console.log("price ", "new " , newItem.Ask, " old ", oldItem.Bid)
 		}
 	}
 
@@ -422,6 +423,7 @@ function checkDumpBinance(){
 	console.log("checkDumpBinance")
 	$.get(binanceTickersUrl, function(data){
 		var list = data;
+		//console.log("result binance", list)
 		for (var i=0; i< list.length; i++){
 			var newItem = list[i];
 			var oldItem = binanceTickers[newItem.symbol]
@@ -434,14 +436,17 @@ function checkDumpBinance(){
 }
 
 function checkDumpBinanceItem(oldItem, newItem){
-	if (newItem.bidQty < 1 || !/.*BTC$/.test(name)){
+	if (newItem.bidQty < 1 || !/.*BTC$/.test(newItem.symbol)){
 		return;
 	}
 	var priceChange = (newItem.askPrice - oldItem.bidPrice)/ oldItem.bidPrice;
-	var code = newItem.symbol.replace("BTC");
+	var code = newItem.symbol.replace("BTC","");
+	//console.log("code", code)
 	if (favoritecoins.indexOf(code)>=0){
 		priceChange = priceChange*2;
 	}
+
+	//console.log("binance",newItem.symbol, "gap ", priceChange, "new " , newItem.askPrice, " old ", oldItem.bidPrice)
 	if (priceChange < -priceDelta){
 		notifyItemBinance("DPBinance", newItem.symbol,  newItem, priceChange)
 		console.log("binance",newItem.symbol, "gap ", priceChange, "new " , newItem.askPrice, " old ", oldItem.bidPrice)
