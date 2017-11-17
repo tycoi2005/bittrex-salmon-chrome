@@ -25,9 +25,10 @@
   },
   "permissions": [
     "tabs",
-    "https://www.bittrex.com/Market/Index?MarketName=BTC-*",
-    "https://www.binance.com/api/v1/",
-    "https://api.hitbtc.com/api/1/",
+    "https://www.bittrex.com/",
+    "https://www.binance.com/api/",
+    "https://api.binance.com/api/",
+    "https://api.hitbtc.com/api/",
     "https://api.etherdelta.com/",
     "https://ajax.googleapis.com/",
     "activeTab",
