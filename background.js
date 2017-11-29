@@ -466,6 +466,22 @@ function notifyItemBinance(type, name, item, gap ){
   	notifyMe(title, body, link)
 }
 
+const upbitNotice = "https://upbit.com/service_center/notice"
+const upbitNoticeApi = "https://api-manager.upbit.com/api/v1/notices?page=1&per_page=10"
+var upbitLastNews = 0;
+function checkNoticeUpbit() {
+	$.get( upbitNoticeApi, function( data ) {
+		if (data.success){
+			var list = data.data.list;
+			var last = list[0];
+			if (upbitLastNews != last.id){
+				upbitLastNews = last.id
+				notifyMe("last Notice Upbit " + last.id, last.title, upbitNotice);
+			}
+		}
+	});
+}
+
 function scheduler(){	
 
 	function doCheck(){
@@ -502,6 +518,11 @@ function scheduler(){
 	}
 	setTimeout(doCheckDumpBinance, 400)
 
+	function doCheckUpbit(){
+		checkNoticeUpbit();
+		setTimeout(doCheckUpbit, loopTime)
+	}
+	setTimeout(doCheckUpbit, 500);
 	// wss://stream2.binance.com:9443/ws/!ticker@arr binance socket api
 }
 

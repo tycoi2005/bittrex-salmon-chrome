@@ -25,6 +25,8 @@
   },
   "permissions": [
     "tabs",
+    "https://upbit.com/",
+    "https://api-manager.upbit.com",
     "https://www.bittrex.com/",
     "https://www.binance.com/api/",
     "https://api.binance.com/api/",

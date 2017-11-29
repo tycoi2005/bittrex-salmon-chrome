@@ -1,6 +1,8 @@
 const apiCurrenciesUrl = "https://www.bittrex.com/api/v1.1/public/getcurrencies";
 var binancePrefix = "https://www.binance.com/trade.html?symbol="
 const binanceCoinsUrl = "https://www.binance.com/api/v1/ticker/allPrices";
+const upbitNotice = "https://upbit.com/service_center/notice"
+const upbitNoticeApi = "https://api-manager.upbit.com/api/v1/notices?page=1&per_page=10"
 
 $(document).ready(function(){
 	console.log("check coins-------------------")
@@ -24,6 +26,21 @@ $(document).ready(function(){
 			coins += "<a href='"+url+"' style='width:100px'>"+item.symbol+"             </a> <span>_______</span>"
 		}
 		$("#newsbinance").html(coins);
+	});
+
+
+	$.get( upbitNoticeApi, function( data ) {
+		if (data.success){
+			var list = data.data.list;
+			var coins ="";
+			for (var i=0; i< 3; i ++){
+				var item = list[i];
+				var url = upbitNotice;
+				var title = item.id + " " + item.title;
+				coins += "<a href='"+url+"' style='width:100px'>"+title+"             </a> <span>_______</span>"
+			}
+			$("#newsUpbit").html(coins);
+		}
 	});
     
 });
