@@ -71,7 +71,7 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 });
 
 function notifyMe(title, body, link) {
-  console.log(new Date(), title);
+  console.log(new Date(), title, body);
   if (Notification.permission !== "granted")
     Notification.requestPermission();
   else {
