@@ -190,6 +190,7 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 	if (delist.indexOf(key)>=0){
 		return;
 	}
+	if(newItem.Ask<=0) return;
 	var delta = newItem.TangNumber - oldItem.TangNumber
 	var priceChange = ((newItem.Ask - oldItem.Bid)/oldItem.Bid)
 	var isSmallcoin = newItem.BaseVolume <= smallCoinVolume;
@@ -504,7 +505,7 @@ function scheduler(){
 		checkEtherDelta();
 		setTimeout(docheckEtherDelta, loopTime)
 	}
-	//setTimeout(docheckEtherDelta, 300);
+	setTimeout(docheckEtherDelta, 300);
 
 	function doCheckDumpHitbtc(){
 		checkDumpHitbtc();
