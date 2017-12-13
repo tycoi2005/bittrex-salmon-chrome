@@ -393,6 +393,9 @@ function checkDumpHitbtcItem(name, oldItem, newItem){
 	if (newItem.volume_quote < 5 || !/.*BTC$/.test(name)){
 		return;
 	}
+	// fix bug 
+	if (name == "ETHBTC" && newItem.ask == 0.034373) return;
+
 	var priceChange = (newItem.ask - oldItem.bid)/ oldItem.bid;
 	var code = name.replace("BTC");
 	if (favoritecoins.indexOf(code)>=0){
