@@ -440,7 +440,7 @@ function checkDumpBinance(){
 }
 
 function checkDumpBinanceItem(oldItem, newItem){
-	if (newItem.bidQty < 1 || !/.*BTC$/.test(newItem.symbol)){
+	if (newItem.bidQty < 1 || newItem.askPrice<=0 || !/.*BTC$/.test(newItem.symbol)){
 		return;
 	}
 	var priceChange = (newItem.askPrice - oldItem.bidPrice)/ oldItem.bidPrice;
