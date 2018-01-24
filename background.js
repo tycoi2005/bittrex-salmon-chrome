@@ -396,6 +396,8 @@ function checkDumpHitbtcItem(name, oldItem, newItem){
 	// fix bug 
 	if (name == "ETHBTC" && newItem.ask == 0.034373) return;
 	if (name == "DASHBTC" && newItem.ask == 0.066783) return;
+	if (name == "KBRBTC" && newItem.ask == 0.0000039) return;
+	if (name == "FYPBTC" && newItem.ask == 0.000096) return;
 
 	var priceChange = (newItem.ask - oldItem.bid)/ oldItem.bid;
 	var code = name.replace("BTC");
