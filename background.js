@@ -342,8 +342,8 @@ function checkNewCoin(){
 
 	
 }
-const etherDeltaTickerUrl = "https://api.etherdelta.com/returnTicker";
-const etherDeltaPrefix = "https://etherdelta.com/#";
+const etherDeltaTickerUrl = "https://api.forkdelta.com/returnTicker";
+const etherDeltaPrefix = "https://forkdelta.com/#";
 var notifieds = {}
 function checkEtherDelta(){
 	console.log("checkEtherDelta")
