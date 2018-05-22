@@ -507,11 +507,11 @@ function scheduler(){
 	setTimeout(doCheckNewCoin, 100);	
 	setTimeout(doWebsocket, 200);
 
-	function docheckEtherDelta(){
-		checkEtherDelta();
-		setTimeout(docheckEtherDelta, loopTime)
-	}
-	setTimeout(docheckEtherDelta, 300);
+	// function docheckEtherDelta(){
+	// 	checkEtherDelta();
+	// 	setTimeout(docheckEtherDelta, loopTime)
+	// }
+	// setTimeout(docheckEtherDelta, 300);
 
 	function doCheckDumpHitbtc(){
 		checkDumpHitbtc();
