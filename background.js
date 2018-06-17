@@ -203,6 +203,7 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 
 	var deltaVol = (newItem.BaseVolume - oldItem.BaseVolume)/oldItem.BaseVolume;
 	var volDeltaFix = volDelta;
+	var isNotifyVol = newItem.BaseVolume > 2;
 	if (isSmallcoin){
 		volDeltaFix = volDeltaFix*2;
 	}
@@ -234,7 +235,7 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 			console.log("price ", "new " , newItem.Ask, " old ", oldItem.Bid)
 		} 
-		else if (deltaVol > volDeltaFix/2 && isCheckVol){
+		else if (deltaVol > volDeltaFix/2 && isCheckVol && isNotifyVol){
 			notifyItem("Vol", newItem, deltaVol)
 			console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
 			console.log("price ", "new " , newItem.Ask, " old ", oldItem.Bid)
@@ -251,7 +252,7 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 			console.log("gap ", delta, "new " , newItem.TangNumber, " old ", oldItem.TangNumber)
 			console.log("price ", "new " , newItem.Ask, " old ", oldItem.Bid)
 		} 
-		else if (deltaVol > volDeltaFix && isCheckVol){
+		else if (deltaVol > volDeltaFix && isCheckVol && isNotifyVol){
 			notifyItem("Vol", newItem, deltaVol)
 			console.log("gap ", delta, "new " , newItem.BaseVolume, " old ", oldItem.BaseVolume)
 			console.log("price ", "new " , newItem.Ask, " old ", oldItem.Bid)
