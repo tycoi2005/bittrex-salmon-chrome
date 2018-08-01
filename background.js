@@ -7,8 +7,8 @@ var loopTime2 = 60000 * 2 ;
 var isNotifyTop = true;
 var isNotifyPump = true;
 var isNotifyDumpT = true;
-var smallCoinVolume = 10;
-var bigCoinVolume = 1000;
+var smallCoinVolume = 100;
+var bigCoinVolume = 5000;
 var isNotifySmallCoin = true;
 var favoritecoins = [];
 var volDelta =0.05;
@@ -155,7 +155,7 @@ function showTop(){
 	  	var lastMap = queue[queue.length-1];
 	  	for (var key in map){
 	  		// only monitor BTC-* markets
-	  		if (!/^BTC-/.test(key))
+	  		if (!/^BTC-/.test(key) && !/^ETH-/.test(key) )
 	  			continue;
 	  		var oldItem = lastMap[key];
 	  		var newItem = map[key]
@@ -169,7 +169,7 @@ function showTop(){
 	  	var lastMap = queue[0];
 	  	for (var key in map){
 	  		// only monitor BTC-* markets
-	  		if (!/^BTC-/.test(key))
+	  		if (!/^BTC-/.test(key) && !/^ETH-/.test(key) )
 	  			continue;
 	  		var oldItem = lastMap[key];
 	  		var newItem = map[key]
@@ -199,6 +199,7 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 	var isSuperSuperSmallcoin = newItem.BaseVolume <= smallCoinVolume/8;
 	var isBigCoin = newItem.BaseVolume >= bigCoinVolume;
 	var coinName = key.replace('BTC-','')
+	coinName = key.replace('ETH-','')
 	var isFavoriteCoin = favoritecoins.indexOf(coinName) >=0;
 
 	var deltaVol = (newItem.BaseVolume - oldItem.BaseVolume)/oldItem.BaseVolume;
@@ -444,7 +445,7 @@ function checkDumpBinance(){
 }
 
 function checkDumpBinanceItem(oldItem, newItem){
-	if (newItem.bidQty < 1 || newItem.askPrice<=0 || !/.*BTC$/.test(newItem.symbol)){
+	if (newItem.bidQty < 1 || newItem.askPrice<=0 || (!/.*BTC$/.test(newItem.symbol) && !/.*ETH$/.test(newItem.symbol)) ){
 		return;
 	}
 	var priceChange = (newItem.askPrice - oldItem.bidPrice)/ oldItem.bidPrice;
