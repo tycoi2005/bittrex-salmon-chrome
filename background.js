@@ -477,6 +477,8 @@ function notifyItemBinance(type, name, item, gap ){
 
 const upbitNotice = "https://upbit.com/service_center/notice"
 const upbitNoticeApi = "https://api-manager.upbit.com/api/v1/notices?page=1&per_page=10"
+const upbitNewsPagePrefix = "https://upbit.com/service_center/notice?id="
+
 var upbitLastNews = 0;
 function checkNoticeUpbit() {
 	$.get( upbitNoticeApi, function( data ) {
@@ -485,7 +487,8 @@ function checkNoticeUpbit() {
 			var last = list[0];
 			if (upbitLastNews != last.id){
 				upbitLastNews = last.id
-				notifyMe("last Notice Upbit " + last.id, last.title, upbitNotice);
+				let url = upbitNewsPagePrefix+ last.id
+				notifyMe("last Notice Upbit " + last.id, last.title, url);
 			}
 		}
 	});
