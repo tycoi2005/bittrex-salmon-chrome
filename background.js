@@ -89,8 +89,8 @@ function notifyMe(title, body, link) {
 }
 
 var count =0 ;
-const apiUrl = "https://www.bittrex.com/api/v1.1/public/getmarketsummaries";
-const prefix = 'https://www.bittrex.com/Market/Index?MarketName=';
+const apiUrl = "https://bittrex.com/api/v1.1/public/getmarketsummaries";
+const prefix = 'https://bittrex.com/Market/Index?MarketName=';
 
 function format(number){
     return $.number( number, 2 )
@@ -263,16 +263,16 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 }
 const binanceCoinsUrl = "https://www.binance.com/api/v1/ticker/allPrices";
 var lastCoin = "";
-var balancePrefix = "https://www.bittrex.com/Balance?search=";
-var binancePrefix = "https://www.binance.com/trade.html?symbol="
+var balancePrefix = "https://bittrex.com/Balance?search=";
+var binancePrefix = "https://binance.com/trade.html?symbol="
 var lastCoinBinance = ""
 var hitbtcCoinUrl = "https://api.hitbtc.com/api/1/public/symbols"
 var hitbtcCoinPrefix = "https://hitbtc.com/exchange/";
 var lastHitbtccoin = "";
 var listHitbtc = {}
 
-const currencyUrl = "https://www.bittrex.com/api/v1.1/public/getcurrencies"
-const marketsUrl = "https://www.bittrex.com/api/v1.1/public/getmarkets";
+const currencyUrl = "https://bittrex.com/api/v1.1/public/getcurrencies"
+const marketsUrl = "https://bittrex.com/api/v1.1/public/getmarkets";
 var delist = []
 
 function checkNewCoin(){

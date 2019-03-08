@@ -1,4 +1,4 @@
-const apiCurrenciesUrl = "https://www.bittrex.com/api/v1.1/public/getcurrencies";
+const apiCurrenciesUrl = "https://bittrex.com/api/v1.1/public/getcurrencies";
 var binancePrefix = "https://www.binance.com/trade.html?symbol="
 const binanceCoinsUrl = "https://www.binance.com/api/v1/ticker/allPrices";
 const upbitNotice = "https://upbit.com/service_center/notice"

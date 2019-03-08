@@ -1,6 +1,6 @@
 var count =0 ;
-const apiUrl = "https://www.bittrex.com/api/v1.1/public/getmarketsummaries";
-const prefix = 'https://www.bittrex.com/Market/Index?MarketName=';
+const apiUrl = "https://bittrex.com/api/v1.1/public/getmarketsummaries";
+const prefix = 'https://bittrex.com/Market/Index?MarketName=';
 
 $(document).ready(function(){
     count ++
