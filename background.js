@@ -264,7 +264,8 @@ function checkItem(oldItem, newItem, key, isCheckVol){
 const binanceCoinsUrl = "https://www.binance.com/api/v1/ticker/allPrices";
 var lastCoin = "";
 var balancePrefix = "https://bittrex.com/Balance?search=";
-var binancePrefix = "https://binance.com/trade.html?symbol="
+//var binancePrefix = "https://binance.com/trade.html?symbol="
+const binancePrefix = "https://www.binance.com/en/trade/";
 var lastCoinBinance = ""
 var hitbtcCoinUrl = "https://api.hitbtc.com/api/1/public/symbols"
 var hitbtcCoinPrefix = "https://hitbtc.com/exchange/";
@@ -330,7 +331,8 @@ function checkNewCoin(){
 				var last = list[list.length-1];
 				console.log("last", last)
 				var name = last.symbol;
-				var url = binancePrefix + name;
+				var match = name.match(/([A-Z0-9]{2,8})(ETH|BNB|USDC|USDT|BTC|USD|PAX)/)
+				var url = binancePrefix + match[1]+"_"+match[2];
 				if (lastCoinBinance != name){
 					lastCoinBinance = name;
 					notifyMe("LastCoin binance " + name, "LastCoin " + name , url)
@@ -470,9 +472,11 @@ function notifyItemBinance(type, name, item, gap ){
 		gap = '-'
 	}
 	var title = type + " " + name + " : "+ gap + " : " + item.askPrice ;
-  	var body = title;
-  	var link = binancePrefix + name;
-  	notifyMe(title, body, link)
+	  var body = title;
+	
+	var match = name.match(/([A-Z0-9]{2,8})(ETH|BNB|USDC|USDT|BTC|USD|PAX)/)
+	var url = binancePrefix + match[1]+"_"+match[2];
+  	notifyMe(title, body, url)
 }
 
 const upbitNotice = "https://upbit.com/service_center/notice"
