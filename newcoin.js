@@ -25,7 +25,7 @@ $(document).ready(function(){
 		var list = data;
 		for (var i=list.length -1; i> list.length -5; i --){
 			var item = list[i];
-			var match = item.symbol.match(/([A-Z0-9]{2,8})(ETH|BNB|USDC|USDT|BTC|USD|PAX)/)
+			var match = item.symbol.match(/([A-Z0-9]{2,8})(ETH|BNB|USDC|USDT|BTC|USD|PAX|TRY|GBP)/)
 			var url = binancePrefix + match[1]+"_"+match[2];
 			coins += "<a href='"+url+"' style='width:100px'>"+item.symbol+"             </a> <span>_______</span>"
 		}
